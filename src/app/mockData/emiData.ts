@@ -1,0 +1,42 @@
+export const emiData = [
+  {
+    id: "1",
+    dueAmount: 150,
+    mobileNumber: 9597299278,
+    name: "Vigneshwaran",
+    nextDueDate: "12/03/2024",
+    totalAmount: 2500,
+  },
+  {
+    id: "2",
+    dueAmount: 150,
+    mobileNumber: 9597299278,
+    name: "Rakesh",
+    nextDueDate: "12/03/2024",
+    totalAmount: 2500,
+  },
+  {
+    id: "3",
+    dueAmount: 150,
+    mobileNumber: 9597299278,
+    name: "Nandhakumar",
+    nextDueDate: "12/03/2024",
+    totalAmount: 2500,
+  },
+  {
+    id: "4",
+    dueAmount: 150,
+    mobileNumber: 9597299278,
+    name: "Thivagar",
+    nextDueDate: "12/03/2024",
+    totalAmount: 2500,
+  },
+  {
+    id: "5",
+    dueAmount: 150,
+    mobileNumber: 8220976108,
+    name: "Sridhar",
+    nextDueDate: "15/03/2024",
+    totalAmount: 2500,
+  },
+];
