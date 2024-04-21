@@ -89,7 +89,7 @@ const LuckyDrawContest = () => {
           Run Draw
         </Button>
       </Box>
-      {Object.keys(drawList).map((item) => {
+      {Object.keys(drawList).map((item: any) => {
         return (
           <Card
             sx={{
@@ -113,7 +113,7 @@ const LuckyDrawContest = () => {
               <Typography ml={"8px"}>{item}</Typography>
             </Box>
 
-            {drawList[item].map((it) => (
+            {drawList[item].map((it: any) => (
               <Box sx={{ mt: "8px" }} key={it.time_of_day}>
                 <Typography
                   sx={{
