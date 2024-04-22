@@ -54,6 +54,11 @@ body {
   /* max-width: 500px; */
 }
 
+.MuiTabs-flexContainer css-k008qs {
+  justify-content: space-around !important;
+
+}
+
 .tab-container .MuiTabs-flexContainer.css-heg063-MuiTabs-flexContainer{
   justify-content: space-around !important;
 }
