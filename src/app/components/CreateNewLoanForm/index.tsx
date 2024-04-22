@@ -6,7 +6,6 @@ import {
   FormControl,
   InputLabel,
   MenuItem,
-  OutlinedInput,
   Select,
   TextField,
   Typography,
@@ -17,23 +16,24 @@ import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import { useCustomerHooks } from "@/app/hooks/useCustomerHooks";
 import { useSchemeHooks } from "@/app/hooks/useSchemeHooks";
 import { Strings } from "@/app/utils/strings";
-import { CreateCustomerInterface } from "@/app/model/customers";
+import { AddNewLoanModel } from "@/app/model/transactions";
 
 const addCustomerScheme = Yup.object().shape({
-  customerName: Yup.string().required(),
-  mobileNumber: Yup.string().required(),
-  address: Yup.string().required(),
+  customer_id: Yup.string().required(),
+  scheme_id: Yup.string().required(),
+  amount: Yup.string().required(),
+  interest_rate: Yup.string().required(),
 });
 
 interface iProps {
-  initialValues: CreateCustomerInterface;
+  initialValues: AddNewLoanModel;
   closeForm: (state: "refresh" | "") => void;
 }
 
-function CreateCustomerForm({ initialValues, closeForm }: iProps) {
+function CreateNewLoanForm({ initialValues, closeForm }: iProps) {
   const { listAllScheme, schemeList } = useSchemeHooks();
 
-  const { isLoading, addNewCustomer, customerCreateErrorMsg } =
+  const { addNewLoanToCustomer, newLoadAdding, newLoadnAddErrorMsg } =
     useCustomerHooks();
 
   useEffect(() => {
@@ -46,8 +46,9 @@ function CreateCustomerForm({ initialValues, closeForm }: iProps) {
     initialValues,
     validationSchema: addCustomerScheme,
     onSubmit: (values: typeof initialValues) => {
-      addNewCustomer(values)
+      addNewLoanToCustomer(values)
         .then((response) => {
+          console.log("response", response);
           closeForm("refresh");
         })
         .catch((error) => {
@@ -67,67 +68,12 @@ function CreateCustomerForm({ initialValues, closeForm }: iProps) {
             fontWeight: "bold",
           }}
         >
-          Add Customer
+          Add New Loan
         </Typography>
         <HighlightOffIcon onClick={() => closeForm("")} />
       </Box>
       <Divider sx={{ my: "8px" }} />
       <>
-        <FormControl fullWidth margin="dense">
-          <TextField
-            label={Strings.customerName}
-            sx={{
-              border: "1px solid #fff",
-              color: "#fff",
-              borderRadius: "8px",
-              mt: "8px",
-            }}
-            variant="outlined"
-            type="text"
-            value={customerForm.values.customerName}
-            onChange={(e) =>
-              customerForm.setFieldValue("customerName", e.target.value)
-            }
-          />
-        </FormControl>
-
-        <FormControl fullWidth margin="dense">
-          <TextField
-            label={Strings.mobileNo}
-            sx={{
-              border: "1px solid #fff",
-              color: "#fff",
-              borderRadius: "8px",
-              mt: "8px",
-            }}
-            variant="outlined"
-            type="number"
-            value={customerForm.values.mobileNumber}
-            onChange={(e) =>
-              customerForm.setFieldValue("mobileNumber", e.target.value)
-            }
-            inputProps={{ maxLength: 10 }}
-          />
-        </FormControl>
-
-        <FormControl fullWidth margin="dense">
-          <TextField
-            label={Strings.address}
-            sx={{
-              border: "1px solid #fff",
-              color: "#fff",
-              borderRadius: "8px",
-              mt: "8px",
-            }}
-            variant="outlined"
-            type="text"
-            value={customerForm.values.address}
-            onChange={(e) =>
-              customerForm.setFieldValue("address", e.target.value)
-            }
-          />
-        </FormControl>
-
         <FormControl fullWidth sx={{ mt: "8px" }}>
           <InputLabel id="demo-simple-select-label">
             {Strings.interestRate}
@@ -185,12 +131,14 @@ function CreateCustomerForm({ initialValues, closeForm }: iProps) {
           </Button>
         </Box>
       </>
-      {isLoading ? <p style={{ color: "#000" }}>{Strings.loading}</p> : null}
-      {customerCreateErrorMsg !== "" ? (
-        <p style={{ color: "#000" }}>{customerCreateErrorMsg}</p>
+      {newLoadAdding ? (
+        <p style={{ color: "#000" }}>{Strings.loading}</p>
+      ) : null}
+      {newLoadnAddErrorMsg !== "" ? (
+        <p style={{ color: "red" }}>{newLoadnAddErrorMsg}</p>
       ) : null}
     </Box>
   );
 }
 
-export default CreateCustomerForm;
+export default CreateNewLoanForm;

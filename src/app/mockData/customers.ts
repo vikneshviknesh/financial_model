@@ -57,3 +57,12 @@ export const customerList = [
     address: "XYZ",
   },
 ];
+
+export const customerCreateInitialData = {
+  customerName: "",
+  mobileNumber: "",
+  address: "",
+  interest_rate: "",
+  amount: "",
+  scheme_id: "",
+};

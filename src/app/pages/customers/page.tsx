@@ -16,13 +16,16 @@ import CreateCustomerForm from "@/app/components/CreateCustomerForm";
 import { useCustomerHooks } from "@/app/hooks/useCustomerHooks";
 import { Strings } from "@/app/utils/strings";
 import UISupportWrapper from "@/app/components/UISupportWrapper";
+import { customerCreateInitialData } from "@/app/mockData/customers";
 
 const CustomersList = () => {
   const { listAllCustomers, customersList, isListFetching, listFetchErrorMsg } =
     useCustomerHooks();
 
   const [open, setOpen] = useState(false);
+
   const handleOpen = () => setOpen(true);
+
   const handleClose = (state: "refresh" | "" = "") => {
     if (state === "refresh") {
       listAllCustomers([]);
@@ -58,6 +61,7 @@ const CustomersList = () => {
                 mobileNumber={customer.mobileNumber}
                 address={customer.address}
                 key={customer.mobileNumber}
+                id={customer.customerId}
               />
             ))}
           </Box>
@@ -74,12 +78,14 @@ const CustomersList = () => {
         />
         <Modal
           open={open}
-          // onClose={handleClose}
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >
           <Box sx={style}>
-            <CreateCustomerForm closeForm={handleClose} />
+            <CreateCustomerForm
+              initialValues={customerCreateInitialData}
+              closeForm={handleClose}
+            />
           </Box>
         </Modal>
       </TableContainer>

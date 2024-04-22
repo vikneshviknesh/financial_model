@@ -25,10 +25,16 @@ interface iProps {
   title: string;
   showBackBtn?: boolean;
   showMenu?: boolean;
+  showUserCircle?: boolean;
 }
 
 const Header = (props: iProps) => {
-  const { title, showBackBtn = true, showMenu = true } = props;
+  const {
+    title,
+    showBackBtn = true,
+    showMenu = true,
+    showUserCircle = true,
+  } = props;
   const {
     logoutUser,
     isLoading: logoutLoading,
@@ -62,12 +68,12 @@ const Header = (props: iProps) => {
   const ProfileMenu = () => {
     return (
       <>
-        <MenuItem onClick={onPressContest}>
+        {/* <MenuItem onClick={onPressContest}>
           <ListItemIcon>
             <CasinoIcon fontSize="small" />
           </ListItemIcon>
           <ListItemText>Lucky Draw</ListItemText>
-        </MenuItem>
+        </MenuItem> */}
 
         <MenuItem onClick={onPressLogout}>
           <ListItemIcon>
@@ -112,7 +118,7 @@ const Header = (props: iProps) => {
           alignItems: "center",
         }}
       >
-        <AccountCircleIcon fontSize="large" />
+        {showUserCircle ? <AccountCircleIcon fontSize="large" /> : null}
         <Box sx={{ flex: 1, ml: "16px" }}>
           <Typography
             sx={{

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Autocomplete,
   Box,
@@ -8,6 +8,10 @@ import {
   CircularProgress,
   Container,
   FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Snackbar,
   TextField,
   Typography,
 } from "@mui/material";
@@ -20,6 +24,8 @@ import { useSchemeHooks } from "@/app/hooks/useSchemeHooks";
 import { loadInterestCalculate } from "@/app/utils/interestCalculator";
 import UISupportWrapper from "@/app/components/UISupportWrapper";
 import { useTransactionHooks } from "@/app/hooks/useTransactionHooks";
+import { useLoanHooks } from "@/app/hooks/useLoanHooks";
+import { CustomersListInterface } from "@/app/model/customers";
 
 const initialValues = {
   customer_name: "",
@@ -35,11 +41,18 @@ const validationSchema = Yup.object().shape({
 });
 
 const AddPayment = () => {
-  const { customersList, listAllCustomers, isListFetching, listFetchErrorMsg } =
-    useCustomerHooks();
+  const { getCustomersList } = useCustomerHooks();
   const { addTransactions } = useTransactionHooks();
-
   const { listAllScheme, schemeList } = useSchemeHooks();
+  const { listAllLoans, loanList, isLoanListFetching, loanListFetchErrorMsg } =
+    useLoanHooks();
+
+  const autoC = useRef<any>(null);
+
+  const [customersList, setCustomersList] = useState<CustomersListInterface[]>(
+    []
+  );
+
   const [customerPaymentList, setCustomerPaymentList] = useState<
     {
       label: string;
@@ -50,23 +63,30 @@ const AddPayment = () => {
       loan_id: string;
     }[]
   >([]);
+  [];
+  const [snackbarData, setSnackbarData] = useState({
+    visible: false,
+    message: "",
+  });
 
   useEffect(() => {
     schemeList.length === 0 ? listAllScheme() : null;
+    loanList.length === 0 ? listAllLoans() : null;
+
     if (customersList.length > 0) {
       const formattedCustomerList = customersList.map((customer) => ({
         label: `${customer.customerName} - ${customer.mobileNumber}`,
         value: `${customer.customerName} - ${customer.mobileNumber}`,
-        amount:
-          loadInterestCalculate(customer?.interest_rate, customer?.amount) ||
-          "0",
+        amount: "0",
         customer_id: customer.customerId,
-        scheme_id: customer.scheme_id,
-        loan_id: customer.loan_id as string,
+        scheme_id: "",
+        loan_id: "",
       }));
       setCustomerPaymentList(formattedCustomerList);
-    } else if (schemeList.length > 0) {
-      listAllCustomers(schemeList);
+    } else {
+      getCustomersList().then((response) => {
+        setCustomersList(response as CustomersListInterface[]);
+      });
     }
   }, [customersList, schemeList]);
 
@@ -92,12 +112,30 @@ const AddPayment = () => {
   }) => {
     addTransactions(updatedPayload, (status: boolean) => {
       if (status) {
-        alert("Success");
+        setSnackbarData({ visible: true, message: "Success" });
       } else {
-        alert("Failure");
+        setSnackbarData({ visible: true, message: "Failure" });
       }
     });
   };
+
+  const handleClose = () => {
+    if (snackbarData.message === "Success") {
+      addPaymentForm.resetForm();
+      setTimeout(() => {
+        const ele = autoC?.current?.getElementsByClassName(
+          "MuiAutocomplete-clearIndicator"
+        )[0];
+        if (ele) ele.click();
+      }, 50);
+    }
+    setSnackbarData({ visible: false, message: "" });
+  };
+
+  const updatedLoanList =
+    loanList.filter(
+      (item) => item.customer_id === addPaymentForm.values.customer_id
+    ) || [];
 
   return (
     <Box
@@ -106,17 +144,16 @@ const AddPayment = () => {
         display: "flex",
         flexDirection: "column",
         height: "100vh",
-        // backgroundColor: "#d8c4ad",
       }}
     >
       <Header title=" Register a Payment" showBackBtn={false} />
-      {isListFetching ? (
+      {isLoanListFetching ? (
         <UISupportWrapper>
           <CircularProgress />
         </UISupportWrapper>
-      ) : listFetchErrorMsg ? (
+      ) : loanListFetchErrorMsg ? (
         <UISupportWrapper>
-          <Typography>{listFetchErrorMsg}</Typography>
+          <Typography>{loanListFetchErrorMsg}</Typography>
         </UISupportWrapper>
       ) : (
         <Container>
@@ -136,6 +173,7 @@ const AddPayment = () => {
 
               <Autocomplete
                 disablePortal
+                ref={autoC}
                 id="combo-box-demo"
                 options={customerPaymentList}
                 fullWidth
@@ -143,10 +181,7 @@ const AddPayment = () => {
                   addPaymentForm.setValues({
                     ...addPaymentForm.values,
                     customer_name: value?.value as string,
-                    amount: value?.amount as string,
                     customer_id: value?.customer_id as string,
-                    scheme_id: value?.scheme_id as string,
-                    loan_id: value?.loan_id as string,
                   });
                 }}
                 renderInput={(params) => (
@@ -163,6 +198,51 @@ const AddPayment = () => {
                 )}
               />
             </FormControl>
+
+            <FormControl fullWidth sx={{ mt: "8px" }}>
+              <InputLabel id="demo-simple-select-label">Loan</InputLabel>
+              <Select
+                variant="outlined"
+                label={"Loan"}
+                value={addPaymentForm.values.loan_id}
+                onChange={(e) => {
+                  if (e.target.value !== "Select") {
+                    const loanSelected =
+                      updatedLoanList.filter(
+                        (loan) => loan.id === e.target.value
+                      )[0] || {};
+                    if (Object.keys(loanSelected).length > 0) {
+                      const interestRate =
+                        schemeList.filter(
+                          (item) => item.id === loanSelected.scheme_id
+                        )[0]?.interest_rate || "0";
+                      const amount =
+                        loadInterestCalculate(
+                          interestRate,
+                          loanSelected?.loan_amount
+                        ) || "0";
+                      addPaymentForm.setValues({
+                        ...addPaymentForm.values,
+                        scheme_id: loanSelected?.scheme_id,
+                        loan_id: loanSelected?.id,
+                        amount,
+                      });
+                    }
+                  }
+                }}
+              >
+                {updatedLoanList.length > 0 ? (
+                  updatedLoanList.map((loan) => (
+                    <MenuItem value={loan.id} key={loan.id}>
+                      {loan.loan_amount}
+                    </MenuItem>
+                  ))
+                ) : (
+                  <MenuItem value={"Select"}>Select</MenuItem>
+                )}
+              </Select>
+            </FormControl>
+
             <FormControl fullWidth margin="dense">
               <Typography id="demo-simple-amount-label">Amount</Typography>
               <TextField
@@ -193,6 +273,13 @@ const AddPayment = () => {
           </Box>
         </Container>
       )}
+      <Snackbar
+        open={snackbarData.visible}
+        autoHideDuration={1000}
+        onClose={handleClose}
+        message={snackbarData.message}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      />
     </Box>
   );
 };
