@@ -1,14 +1,23 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Box, Container } from "@mui/material";
 
 import EMICard from "@/app/components/EMICard";
 import Header from "@/app/components/Header";
 import { emiData } from "@/app/mockData/emiData";
+import { useAuthHooks } from "@/app/hooks/useAuthHooks";
 
 function Dashboard() {
+  const { getLoggedInUserInfo, userData } = useAuthHooks();
+
+  const userName = userData.displayName || "User";
+
+  useEffect(() => {
+    getLoggedInUserInfo();
+  }, []);
+
   return (
     <Container disableGutters sx={{ height: "100vh" }}>
-      <Header title="Welcome Vigneshwaran" showBackBtn={false} />
+      <Header title={`Welcome ${userName}`} showBackBtn={false} />
       <Box sx={{ paddingBottom: "50px" }}>
         {emiData.map((emi) => (
           <EMICard

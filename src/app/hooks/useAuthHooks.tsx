@@ -1,8 +1,9 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import {
   User,
+  getAuth,
   onAuthStateChanged,
   signInWithEmailAndPassword,
   signOut,
@@ -115,6 +116,24 @@ export const useAuthHooks = () => {
     }
   };
 
+  const getLoggedInUserInfo = async () => {
+    try {
+      const user: any = await auth.currentUser;
+      const accessToken = await user.getIdToken();
+      const data: UserDataInterface = {
+        displayName: user.displayName || "",
+        email: user.email || "",
+        accessToken: accessToken || "",
+        uId: user.uid || "",
+        refreshToken: user.refreshToken || "",
+        photoURL: user?.photoURL || "",
+      };
+      setUserData(data);
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+
   return {
     checkIsLoggedIn,
     loginUser,
@@ -124,5 +143,6 @@ export const useAuthHooks = () => {
     isLoading,
     logoutUser,
     profileUpdate,
+    getLoggedInUserInfo,
   };
 };

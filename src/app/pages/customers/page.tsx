@@ -8,7 +8,7 @@ import {
   TableContainer,
   Typography,
 } from "@mui/material";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
+import AddCircle from "@mui/icons-material/AddCircle";
 
 import Header from "@/app/components/Header";
 import CustomerCard from "@/app/components/CustomerCard";
@@ -35,53 +35,55 @@ const CustomersList = () => {
   }, []);
 
   return (
-    <TableContainer sx={{ height: "100vh", position: "relative" }}>
+    <>
       <Header title="Customers" showBackBtn={false} />
-      {isListFetching ? (
-        <UISupportWrapper>
-          <CircularProgress />
-        </UISupportWrapper>
-      ) : listFetchErrorMsg ? (
-        <UISupportWrapper>
-          <Typography>{listFetchErrorMsg}</Typography>
-        </UISupportWrapper>
-      ) : customersList.length === 0 ? (
-        <UISupportWrapper>
-          <Typography>{Strings.noCustomerData}</Typography>
-        </UISupportWrapper>
-      ) : (
-        <Box sx={{ flex: 1 }}>
-          {customersList.map((customer) => (
-            <CustomerCard
-              name={customer.customerName}
-              mobileNumber={customer.mobileNumber}
-              address={customer.address}
-              key={customer.mobileNumber}
-            />
-          ))}
-        </Box>
-      )}
-      <AddCircleIcon
-        sx={{
-          fontSize: "48px",
-          position: "fixed",
-          right: "16px",
-          bottom: "10%",
-          color: "#fff",
-        }}
-        onClick={handleOpen}
-      />
-      <Modal
-        open={open}
-        // onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
-          <CreateCustomerForm closeForm={handleClose} />
-        </Box>
-      </Modal>
-    </TableContainer>
+      <TableContainer sx={{ maxHeight: "725px" }}>
+        {isListFetching ? (
+          <UISupportWrapper>
+            <CircularProgress />
+          </UISupportWrapper>
+        ) : listFetchErrorMsg ? (
+          <UISupportWrapper>
+            <Typography>{listFetchErrorMsg}</Typography>
+          </UISupportWrapper>
+        ) : customersList.length === 0 ? (
+          <UISupportWrapper>
+            <Typography>{Strings.noCustomerData}</Typography>
+          </UISupportWrapper>
+        ) : (
+          <Box sx={{ flex: 1 }}>
+            {customersList.map((customer) => (
+              <CustomerCard
+                name={customer.customerName}
+                mobileNumber={customer.mobileNumber}
+                address={customer.address}
+                key={customer.mobileNumber}
+              />
+            ))}
+          </Box>
+        )}
+        <AddCircle
+          sx={{
+            fontSize: "48px",
+            position: "fixed",
+            right: "16px",
+            bottom: "10%",
+            color: "#24706f",
+          }}
+          onClick={handleOpen}
+        />
+        <Modal
+          open={open}
+          // onClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={style}>
+            <CreateCustomerForm closeForm={handleClose} />
+          </Box>
+        </Modal>
+      </TableContainer>
+    </>
   );
 };
 

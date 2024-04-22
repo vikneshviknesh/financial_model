@@ -19,6 +19,7 @@ import { useAuthHooks } from "@/app/hooks/useAuthHooks";
 import CustomeLoader from "../CustomeLoader";
 import { useRouter } from "next/navigation";
 import CasinoIcon from "@mui/icons-material/Casino";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 interface iProps {
   title: string;
@@ -94,12 +95,13 @@ const Header = (props: iProps) => {
   return (
     <Card
       sx={{
-        padding: "8px",
+        padding: "12px",
         position: "sticky",
         top: 0,
         display: "flex",
         flexDirection: "row",
         alignItems: "center",
+        backgroundColor: "#19a189",
       }}
     >
       {showBackBtn ? <ArrowBackIosIcon onClick={handleBackClick} /> : null}
@@ -107,19 +109,20 @@ const Header = (props: iProps) => {
         sx={{
           display: "flex",
           flex: 1,
-          justifyContent: "center",
+          alignItems: "center",
         }}
       >
-        <Typography
-          sx={{
-            textAlign: "center",
-            color: "#000",
-            fontWeight: "bold",
-            fontSize: "16px",
-          }}
-        >
-          {title}
-        </Typography>
+        <AccountCircleIcon fontSize="large" />
+        <Box sx={{ flex: 1, ml: "16px" }}>
+          <Typography
+            sx={{
+              fontWeight: "500",
+              fontSize: "18px",
+            }}
+          >
+            {title}
+          </Typography>
+        </Box>
       </Box>
       {!showBackBtn ? (
         <>

@@ -11,15 +11,20 @@ import {
   CardContent,
   Container,
   FormControl,
+  InputAdornment,
   TextField,
   Typography,
 } from "@mui/material";
 import { Strings } from "@/app/utils/strings";
 import CustomeLoader from "@/app/components/CustomeLoader";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
 export default function Login() {
   const { isLoading, isLoggedIn, loginUser, userLoginErrorMsg } =
     useAuthHooks();
+
+  const [showPassword, setShowPassword] = useState(false);
 
   const router = useRouter();
 
@@ -33,6 +38,15 @@ export default function Login() {
       router.push("/pages/admin");
     }
   }, [isLoggedIn]);
+
+  const togglePassword = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const isValidForm =
+    userInfo.email !== "" &&
+    userInfo.password !== "" &&
+    userInfo.email.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/);
 
   return (
     <Container
@@ -77,7 +91,7 @@ export default function Login() {
             <FormControl fullWidth margin="dense">
               <Typography>{Strings.password}</Typography>
               <TextField
-                type="password"
+                type={showPassword ? "text" : "password"}
                 value={userInfo.password}
                 onChange={(e) =>
                   setUserInfo({
@@ -87,6 +101,17 @@ export default function Login() {
                 }
                 sx={{ mt: "8px" }}
                 placeholder="Password"
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      {showPassword ? (
+                        <VisibilityOffIcon onClick={togglePassword} />
+                      ) : (
+                        <VisibilityIcon onClick={togglePassword} />
+                      )}
+                    </InputAdornment>
+                  ),
+                }}
               />
             </FormControl>
 
@@ -96,7 +121,7 @@ export default function Login() {
               </Typography>
             ) : null}
             {userLoginErrorMsg !== "" ? (
-              <Typography style={{ color: "#000" }}>
+              <Typography style={{ color: "#d92324", marginTop: "12px" }}>
                 {userLoginErrorMsg}
               </Typography>
             ) : null}
@@ -105,7 +130,11 @@ export default function Login() {
           <Box sx={{ mt: "24px", textAlign: "center" }}>
             <Button
               onClick={() => {
-                loginUser(userInfo);
+                if (isValidForm) {
+                  loginUser(userInfo);
+                } else {
+                  alert("Fix the issues and try again");
+                }
               }}
               variant="outlined"
               sx={{ textTransform: "capitalize" }}

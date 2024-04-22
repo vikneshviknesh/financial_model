@@ -106,7 +106,7 @@ const AddPayment = () => {
         display: "flex",
         flexDirection: "column",
         height: "100vh",
-        backgroundColor: "#fff",
+        // backgroundColor: "#d8c4ad",
       }}
     >
       <Header title=" Register a Payment" showBackBtn={false} />
@@ -177,7 +177,8 @@ const AddPayment = () => {
                 onChange={(e) =>
                   addPaymentForm.setFieldValue("amount", e.target.value)
                 }
-                placeholder=""
+                placeholder="Amount"
+                disabled
               />
             </FormControl>
             <Box sx={{ mt: "16px", textAlign: "center" }}>
