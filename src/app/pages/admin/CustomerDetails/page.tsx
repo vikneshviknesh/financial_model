@@ -103,6 +103,7 @@ function CustomerDetails() {
                 loan_amount={loanInfo.loan_amount}
                 scheme_id={loanInfo.scheme_id}
                 updated_at={loanInfo.updated_at}
+                key={loanInfo.id}
               />
             ))}
           </Box>
