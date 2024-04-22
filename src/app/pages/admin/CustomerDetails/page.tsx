@@ -53,7 +53,7 @@ function CustomerDetails() {
         setCustomerName(response?.customerName);
       });
     }
-  }, []);
+  }, [customerID]);
 
   return (
     <>
