@@ -2,21 +2,25 @@
 
 import React, { useState } from "react";
 
-const TransactionsContext = React.createContext({
-  // allSchemes: []
-});
-const TransactionsProvider = ({ children }: { children: React.ReactNode }) => {
-  const [allSchemes, setAllSchemes] = useState<any[]>([]);
+interface iProps {
+  selectedTab: number;
+  changeTab: (value: number) => void;
+}
 
-  const updateSchemes = (value: any[]) => {
-    setAllSchemes(value);
+export const TabsContext = React.createContext<iProps>({} as iProps);
+const TabsProvider = ({ children }: { children: React.ReactNode }) => {
+  const [selectedTab, setSelectedTab] = useState(0);
+
+  const changeTab = (value: number) => {
+    console.log("value", value);
+    setSelectedTab(value);
   };
 
   return (
-    <TransactionsContext.Provider value={{ allSchemes, updateSchemes }}>
+    <TabsContext.Provider value={{ selectedTab, changeTab }}>
       {children}
-    </TransactionsContext.Provider>
+    </TabsContext.Provider>
   );
 };
 
-export default TransactionsProvider;
+export default TabsProvider;

@@ -10,4 +10,5 @@ export const Strings = {
   email: "Email",
   password: "Password",
   pleaseWait: "Please Wait...",
+  noLoanData: "No Loans Found",
 };

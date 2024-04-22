@@ -12,6 +12,7 @@ import {
   Container,
   FormControl,
   InputAdornment,
+  InputLabel,
   TextField,
   Typography,
 } from "@mui/material";
@@ -54,12 +55,22 @@ export default function Login() {
         flex: 1,
         display: "flex",
         height: "100vh",
-        backgroundColor: "#000",
+        backgroundColor: "#b9d893",
         flexDirection: "column",
         justifyContent: "center",
+        alignItems: "center",
+        padding: "16px",
       }}
+      disableGutters
     >
-      <Card sx={{ minHeight: "45%" }}>
+      <Card
+        sx={{
+          minHeight: "45%",
+          backgroundColor: "#e0e5cf",
+          maxWidth: "500px !important",
+          borderRadius: "12px",
+        }}
+      >
         <Box sx={{ mt: "16px" }}>
           <Typography
             sx={{
@@ -74,9 +85,10 @@ export default function Login() {
         <CardContent>
           <>
             <FormControl fullWidth margin="dense">
-              <Typography>{Strings.email}</Typography>
               <TextField
                 type="email"
+                variant="outlined"
+                label={Strings.email}
                 value={userInfo.email}
                 onChange={(e) =>
                   setUserInfo({
@@ -85,12 +97,12 @@ export default function Login() {
                   })
                 }
                 sx={{ mt: "8px" }}
-                placeholder="Email ID"
               />
             </FormControl>
             <FormControl fullWidth margin="dense">
-              <Typography>{Strings.password}</Typography>
               <TextField
+                variant="outlined"
+                label={Strings.password}
                 type={showPassword ? "text" : "password"}
                 value={userInfo.password}
                 onChange={(e) =>
@@ -100,7 +112,6 @@ export default function Login() {
                   })
                 }
                 sx={{ mt: "8px" }}
-                placeholder="Password"
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
