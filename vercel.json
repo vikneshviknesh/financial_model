@@ -1,7 +1,7 @@
 {
   "crons": [
     {
-      "path": "./src/api/drawResults",
+      "path": "./src/app/api/drawResults",
       "schedule": "*/5 * * * *"
     }
   ]
