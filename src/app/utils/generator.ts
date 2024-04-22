@@ -24,3 +24,10 @@ const generateRandom = (
 
   return isValueExists ? generateRandom(min, max, localArray) : spinnedValue;
 };
+
+export const getARandomNumber = (): number => {
+  const count = { max: 20, min: 1 };
+  let spinnedValue =
+    Math.floor(Math.random() * (count.max - count.min + 1)) + count.min;
+  return spinnedValue;
+};

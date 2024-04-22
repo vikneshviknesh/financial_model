@@ -4,6 +4,7 @@ import {
   Button,
   Divider,
   FormControl,
+  InputLabel,
   MenuItem,
   OutlinedInput,
   Select,
@@ -80,79 +81,68 @@ function CreateCustomerForm({ closeForm }: iProps) {
       <Divider sx={{ my: "8px" }} />
       <>
         <FormControl fullWidth margin="dense">
-          <Typography id="demo-simple-amount-label">
-            {Strings.customerName}
-          </Typography>
           <TextField
+            label={Strings.customerName}
             sx={{
               border: "1px solid #fff",
               color: "#fff",
               borderRadius: "8px",
               mt: "8px",
             }}
+            variant="outlined"
             type="text"
             value={customerForm.values.customerName}
             onChange={(e) =>
               customerForm.setFieldValue("customerName", e.target.value)
             }
-            placeholder="Customer Name"
           />
         </FormControl>
 
         <FormControl fullWidth margin="dense">
-          <Typography id="demo-simple-amount-label">
-            {Strings.mobileNo}
-          </Typography>
           <TextField
+            label={Strings.mobileNo}
             sx={{
               border: "1px solid #fff",
               color: "#fff",
               borderRadius: "8px",
               mt: "8px",
             }}
+            variant="outlined"
             type="number"
             value={customerForm.values.mobileNumber}
             onChange={(e) =>
               customerForm.setFieldValue("mobileNumber", e.target.value)
             }
-            placeholder="Mobile Number"
             inputProps={{ maxLength: 10 }}
           />
         </FormControl>
 
         <FormControl fullWidth margin="dense">
-          <Typography id="demo-simple-amount-label">
-            {Strings.address}
-          </Typography>
           <TextField
+            label={Strings.address}
             sx={{
               border: "1px solid #fff",
               color: "#fff",
               borderRadius: "8px",
               mt: "8px",
             }}
+            variant="outlined"
             type="text"
             value={customerForm.values.address}
             onChange={(e) =>
               customerForm.setFieldValue("address", e.target.value)
             }
-            placeholder="Address"
           />
         </FormControl>
 
-        <FormControl fullWidth margin="dense">
-          <Typography id="demo-simple-amount-label">
+        <FormControl fullWidth sx={{ mt: "8px" }}>
+          <InputLabel id="demo-simple-select-label">
             {Strings.interestRate}
-          </Typography>
+          </InputLabel>
           <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
+            variant="outlined"
+            label={Strings.interestRate}
             value={customerForm.values.interest_rate}
-            sx={{
-              border: "1px solid #fff",
-              borderRadius: "8px",
-              mt: "8px",
-            }}
             onChange={(e) => {
               const schemeSelected =
                 schemeList.filter(
@@ -176,9 +166,6 @@ function CreateCustomerForm({ closeForm }: iProps) {
         </FormControl>
 
         <FormControl fullWidth margin="dense">
-          <Typography id="demo-simple-amount-label">
-            {Strings.amount}
-          </Typography>
           <TextField
             sx={{
               border: "1px solid #fff",
@@ -186,12 +173,13 @@ function CreateCustomerForm({ closeForm }: iProps) {
               borderRadius: "8px",
               mt: "8px",
             }}
+            label={Strings.amount}
+            variant="outlined"
             type="number"
             value={customerForm.values.amount}
             onChange={(e) =>
               customerForm.setFieldValue("amount", e.target.value)
             }
-            placeholder="Amount"
           />
         </FormControl>
 

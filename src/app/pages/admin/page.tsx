@@ -19,6 +19,7 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import Dashboard from "./Dashboard/page";
 import AddPayment from "../addPayment/page";
 import CustomersList from "../customers/page";
+import LuckyDrawContest from "../luckyDrawContest/page";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -60,7 +61,7 @@ function Admin() {
   return (
     <Container disableGutters sx={{ maxWidth: "500px !important" }}>
       <CustomTabPanel value={value} index={0}>
-        <Dashboard />
+        <LuckyDrawContest />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
         <AddPayment />
