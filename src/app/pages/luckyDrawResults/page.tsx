@@ -64,11 +64,15 @@ const LuckyDrawResults = () => {
             minHeight: "40%",
           }}
         >
-          {drawList[today].map((item: LuckyDrawResultsModel, index: number) => (
-            <li style={{ fontSize: "20px" }} key={item.id}>
-              {index + 1}. {item.selected_numbers}
-            </li>
-          ))}
+          {drawList[today] !== undefined
+            ? drawList[today]?.map(
+                (item: LuckyDrawResultsModel, index: number) => (
+                  <li style={{ fontSize: "20px" }} key={item.id}>
+                    {index + 1}. {item.selected_numbers}
+                  </li>
+                )
+              )
+            : null}
         </ol>
       </div>
 
