@@ -65,7 +65,7 @@ const LuckyDrawResults = () => {
           }}
         >
           {drawList[today].map((item: LuckyDrawResultsModel, index: number) => (
-            <li style={{ fontSize: "20px" }}>
+            <li style={{ fontSize: "20px" }} key={item.id}>
               {index + 1}. {item.selected_numbers}
             </li>
           ))}
