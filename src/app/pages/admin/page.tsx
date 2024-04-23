@@ -75,7 +75,7 @@ function Admin() {
         onChange={handleChange}
         aria-label="basic tabs example"
         className="tab-container"
-        sx={{ maxWidth: "500px !important" }}
+        sx={{ maxWidth: "500px !important", height: "7vh" }}
       >
         <Tab
           icon={<HomeIcon sx={{ fontSize: "42px" }} />}

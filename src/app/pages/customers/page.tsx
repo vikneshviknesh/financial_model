@@ -40,7 +40,7 @@ const CustomersList = () => {
   return (
     <>
       <Header title="Customers" showBackBtn={false} />
-      <TableContainer sx={{ maxHeight: "725px" }}>
+      <TableContainer sx={{ height: "86vh" }}>
         {isListFetching ? (
           <UISupportWrapper>
             <CircularProgress />
