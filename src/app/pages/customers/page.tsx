@@ -17,6 +17,7 @@ import { useCustomerHooks } from "@/app/hooks/useCustomerHooks";
 import { Strings } from "@/app/utils/strings";
 import UISupportWrapper from "@/app/components/UISupportWrapper";
 import { customerCreateInitialData } from "@/app/mockData/customers";
+import withAuth from "@/app/components/AuthGuardProvider";
 
 const CustomersList = () => {
   const { listAllCustomers, customersList, isListFetching, listFetchErrorMsg } =
@@ -106,4 +107,4 @@ const style = {
   borderRadius: "8px",
 };
 
-export default CustomersList;
+export default withAuth(CustomersList);

@@ -20,6 +20,7 @@ import Dashboard from "./Dashboard/page";
 import AddPayment from "../addPayment/page";
 import CustomersList from "../customers/page";
 import LuckyDrawContest from "../luckyDrawContest/page";
+import withAuth from "@/app/components/AuthGuardProvider";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -97,4 +98,4 @@ function Admin() {
   );
 }
 
-export default Admin;
+export default withAuth(Admin);

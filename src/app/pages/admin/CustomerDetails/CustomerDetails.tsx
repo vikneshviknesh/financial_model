@@ -18,6 +18,8 @@ import { useSearchParams } from "next/navigation";
 import TransactionCard from "@/app/components/TransactionCard";
 import { useCustomerHooks } from "@/app/hooks/useCustomerHooks";
 import CreateNewLoanForm from "@/app/components/CreateNewLoanForm";
+import withAuth from "@/app/components/AuthGuardProvider";
+import { isValidString } from "@/app/utils";
 
 function CustomerDetails() {
   const searchParams = useSearchParams();
@@ -64,23 +66,25 @@ function CustomerDetails() {
       />
 
       <Container>
-        <Box
-          sx={{
-            alignSelf: "flex-start",
-            display: "inline-block",
-            marginLeft: "16px",
-            marginTop: "8px",
-            padding: "8px",
-            paddingRight: "12px",
-            backgroundColor: "#bce45c",
-            color: "#000",
-            borderRadius: "8px",
-            borderTopRightRadius: "50px",
-            borderBottomRightRadius: "50px",
-          }}
-        >
-          <Typography>{customerName}</Typography>
-        </Box>
+        {isValidString(customerName) ? (
+          <Box
+            sx={{
+              alignSelf: "flex-start",
+              display: "inline-block",
+              marginLeft: "16px",
+              marginTop: "8px",
+              padding: "8px",
+              paddingRight: "12px",
+              backgroundColor: "#bce45c",
+              color: "#000",
+              borderRadius: "8px",
+              borderTopRightRadius: "50px",
+              borderBottomRightRadius: "50px",
+            }}
+          >
+            <Typography>{customerName}</Typography>
+          </Box>
+        ) : null}
         {isFetching ? (
           <UISupportWrapper>
             <CircularProgress />
@@ -136,7 +140,7 @@ function CustomerDetails() {
   );
 }
 
-export default CustomerDetails;
+export default withAuth(CustomerDetails);
 
 const style = {
   position: "absolute" as "absolute",

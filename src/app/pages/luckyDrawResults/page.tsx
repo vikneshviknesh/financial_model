@@ -1,60 +1,23 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect } from "react";
+import moment from "moment";
 
 import { Footer } from "@/app/components";
 import CustomeLoader from "@/app/components/CustomeLoader";
 import { useLuckyDrawHooks } from "@/app/hooks/useLuckyDraw";
-import { CreateLuckyDrawInterface } from "@/app/model/luckyDraw";
 import { LocalImages } from "@/app/utils";
-import { getTimeOfDay } from "@/app/utils/date";
-import { Button } from "@mui/material";
-import Dice from "react-dice-roll";
+import { LuckyDrawResultsModel } from "@/app/model/luckyDraw";
 
 const LuckyDrawResults = () => {
-  const {
-    addNewDrawResult,
-    addResultErrorMsg,
-    currentDrawList,
-    drawListFetchErrorMsg,
-    getLuckyDrawByFilter,
-    isAddResultLoading,
-    isDrawLoading,
-  } = useLuckyDrawHooks();
-  const [winnersList, setWinnersList] = useState<number[]>([]);
+  const { drawList, getAllLuckyDrawResults, isDrawLoading } =
+    useLuckyDrawHooks();
 
-  let count = { max: 20, min: 1 };
-  let noOfSpin = 3;
+  const today = moment().format("DD/MM/YYYY");
 
-  const doATrick = () => {
-    let localArray: number[] = [];
-    while (noOfSpin > 0) {
-      let spinnedValue = generateRandom(count.min, count.max, localArray);
-      localArray.push(spinnedValue);
-      noOfSpin -= 1;
-      if (noOfSpin === 0) {
-        const time_of_day = getTimeOfDay();
-        const payload: CreateLuckyDrawInterface = {
-          selected_numbers: localArray.join(","),
-          time_of_day,
-        };
-        addNewDrawResult(payload);
-        setWinnersList(localArray);
-      }
-    }
-  };
-
-  const generateRandom = (
-    min: number,
-    max: number,
-    localArray: number[]
-  ): number => {
-    let spinnedValue = Math.floor(Math.random() * (max - min + 1)) + min;
-    const isValueExists =
-      localArray.length > 0 ? localArray.includes(spinnedValue) : false;
-
-    return isValueExists ? generateRandom(min, max, localArray) : spinnedValue;
-  };
+  useEffect(() => {
+    getAllLuckyDrawResults();
+  }, []);
 
   return (
     <div
@@ -70,7 +33,6 @@ const LuckyDrawResults = () => {
       }}
     >
       <CustomeLoader isLoading={isDrawLoading} />
-      <Button onClick={doATrick}>Do a flip</Button>
       <h2
         style={{
           textAlign: "center",
@@ -102,9 +64,9 @@ const LuckyDrawResults = () => {
             minHeight: "40%",
           }}
         >
-          {winnersList.map((item, index) => (
-            <li key={item.toString()} style={{ fontSize: "20px" }}>
-              {index + 1}. {item}
+          {drawList[today].map((item: LuckyDrawResultsModel, index: number) => (
+            <li style={{ fontSize: "20px" }}>
+              {index + 1}. {item.selected_numbers}
             </li>
           ))}
         </ol>

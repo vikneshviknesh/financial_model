@@ -11,6 +11,14 @@ export interface ListLuckyDrawInterface extends CreateLuckyDrawInterface {
   updated_at: string;
 }
 
+export interface LuckyDrawResultsModel {
+  created_at: string;
+  id: string;
+  selected_numbers: string;
+  time_of_day: string;
+  updated_at: string;
+}
+
 // export interface ModifiedLuckDrawListInterface {
 //   [string]: string
 // }

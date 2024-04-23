@@ -26,6 +26,8 @@ import UISupportWrapper from "@/app/components/UISupportWrapper";
 import { useTransactionHooks } from "@/app/hooks/useTransactionHooks";
 import { useLoanHooks } from "@/app/hooks/useLoanHooks";
 import { CustomersListInterface } from "@/app/model/customers";
+import withAuth from "@/app/components/AuthGuardProvider";
+import { isValidString } from "@/app/utils";
 
 const initialValues = {
   customer_name: "",
@@ -36,8 +38,9 @@ const initialValues = {
 };
 
 const validationSchema = Yup.object().shape({
-  customer_name: Yup.string().required(),
-  amount: Yup.string().required(),
+  customer_name: Yup.string().required("Select the customer"),
+  loan_id: Yup.string().required("Select the loan amount"),
+  amount: Yup.string().required("Amount is required"),
 });
 
 const AddPayment = () => {
@@ -194,6 +197,11 @@ const AddPayment = () => {
                       borderRadius: "8px",
                       mt: "8px",
                     }}
+                    error={
+                      isValidString(addPaymentForm.errors.customer_name) &&
+                      addPaymentForm.touched.customer_name
+                    }
+                    helperText={addPaymentForm.errors.customer_name}
                   />
                 )}
               />
@@ -241,10 +249,19 @@ const AddPayment = () => {
                   <MenuItem value={"Select"}>Select</MenuItem>
                 )}
               </Select>
+              {isValidString(addPaymentForm.errors.loan_id) &&
+              addPaymentForm.touched.loan_id ? (
+                <Typography
+                  color={"#d32f2f"}
+                  fontSize={"12px"}
+                  padding={"4px 12px 0px 12px"}
+                >
+                  {addPaymentForm.errors.loan_id}
+                </Typography>
+              ) : null}
             </FormControl>
 
             <FormControl fullWidth margin="dense">
-              <Typography id="demo-simple-amount-label">Amount</Typography>
               <TextField
                 sx={{
                   border: "1px solid #fff",
@@ -252,13 +269,20 @@ const AddPayment = () => {
                   borderRadius: "8px",
                   mt: "8px",
                 }}
+                variant="outlined"
                 type="number"
+                label="Amount"
                 value={addPaymentForm.values.amount}
                 onChange={(e) =>
                   addPaymentForm.setFieldValue("amount", e.target.value)
                 }
                 placeholder="Amount"
                 disabled
+                error={
+                  isValidString(addPaymentForm.errors.amount) &&
+                  addPaymentForm.touched.amount
+                }
+                helperText={addPaymentForm.errors.amount}
               />
             </FormControl>
             <Box sx={{ mt: "16px", textAlign: "center" }}>
@@ -284,4 +308,4 @@ const AddPayment = () => {
   );
 };
 
-export default AddPayment;
+export default withAuth(AddPayment);

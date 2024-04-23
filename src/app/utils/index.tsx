@@ -1,3 +1,6 @@
 import LocalImages from "./images";
 
-export { LocalImages };
+const isValidString = (value: string | undefined | null) => {
+  return value !== null && value !== undefined && value !== "";
+};
+export { LocalImages, isValidString };

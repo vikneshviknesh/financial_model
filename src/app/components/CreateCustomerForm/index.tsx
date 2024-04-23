@@ -18,11 +18,16 @@ import { useCustomerHooks } from "@/app/hooks/useCustomerHooks";
 import { useSchemeHooks } from "@/app/hooks/useSchemeHooks";
 import { Strings } from "@/app/utils/strings";
 import { CreateCustomerInterface } from "@/app/model/customers";
+import { isValidString } from "@/app/utils";
 
 const addCustomerScheme = Yup.object().shape({
-  customerName: Yup.string().required(),
-  mobileNumber: Yup.string().required(),
-  address: Yup.string().required(),
+  customerName: Yup.string().required("Customer Name is required"),
+  mobileNumber: Yup.number()
+    .typeError("Enter valid mobile number")
+    .required("Mobile number is required"),
+  address: Yup.string().required("Address is required"),
+  interest_rate: Yup.string().required("Interest Rate is required"),
+  amount: Yup.string().required("Amount is required"),
 });
 
 interface iProps {
@@ -44,6 +49,7 @@ function CreateCustomerForm({ initialValues, closeForm }: iProps) {
 
   const customerForm = useFormik({
     initialValues,
+    validateOnChange: true,
     validationSchema: addCustomerScheme,
     onSubmit: (values: typeof initialValues) => {
       addNewCustomer(values)
@@ -88,6 +94,11 @@ function CreateCustomerForm({ initialValues, closeForm }: iProps) {
             onChange={(e) =>
               customerForm.setFieldValue("customerName", e.target.value)
             }
+            error={
+              isValidString(customerForm.errors.customerName) &&
+              customerForm.touched.customerName
+            }
+            helperText={customerForm.errors.customerName}
           />
         </FormControl>
 
@@ -101,12 +112,16 @@ function CreateCustomerForm({ initialValues, closeForm }: iProps) {
               mt: "8px",
             }}
             variant="outlined"
-            type="number"
             value={customerForm.values.mobileNumber}
             onChange={(e) =>
               customerForm.setFieldValue("mobileNumber", e.target.value)
             }
             inputProps={{ maxLength: 10 }}
+            error={
+              isValidString(customerForm.errors.mobileNumber) &&
+              customerForm.touched.mobileNumber
+            }
+            helperText={customerForm.errors.mobileNumber}
           />
         </FormControl>
 
@@ -125,6 +140,11 @@ function CreateCustomerForm({ initialValues, closeForm }: iProps) {
             onChange={(e) =>
               customerForm.setFieldValue("address", e.target.value)
             }
+            error={
+              isValidString(customerForm.errors.address) &&
+              customerForm.touched.address
+            }
+            helperText={customerForm.errors.address}
           />
         </FormControl>
 
@@ -149,6 +169,10 @@ function CreateCustomerForm({ initialValues, closeForm }: iProps) {
                 });
               }
             }}
+            error={
+              isValidString(customerForm.errors.interest_rate) &&
+              customerForm.touched.interest_rate
+            }
           >
             {schemeList.map((scheme) => (
               <MenuItem value={scheme.interest_rate} key={scheme.id}>
@@ -156,6 +180,16 @@ function CreateCustomerForm({ initialValues, closeForm }: iProps) {
               </MenuItem>
             ))}
           </Select>
+          {isValidString(customerForm.errors.interest_rate) &&
+          customerForm.touched.interest_rate ? (
+            <Typography
+              color={"#d32f2f"}
+              fontSize={"12px"}
+              padding={"4px 12px 0px 12px"}
+            >
+              {customerForm.errors.interest_rate}
+            </Typography>
+          ) : null}
         </FormControl>
 
         <FormControl fullWidth margin="dense">
@@ -173,6 +207,11 @@ function CreateCustomerForm({ initialValues, closeForm }: iProps) {
             onChange={(e) =>
               customerForm.setFieldValue("amount", e.target.value)
             }
+            error={
+              isValidString(customerForm.errors.amount) &&
+              customerForm.touched.amount
+            }
+            helperText={customerForm.errors.amount}
           />
         </FormControl>
 

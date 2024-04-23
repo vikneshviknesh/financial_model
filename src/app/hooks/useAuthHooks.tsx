@@ -30,14 +30,17 @@ export const useAuthHooks = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userLoginErrorMsg, setUserLoginErrorMsg] = useState("");
   const [isLoading, setLoading] = useState(false);
+  const [checkingLogin, setCheckingLogin] = useState(true);
 
   const checkIsLoggedIn = async () => {
+    setCheckingLogin(true);
     onAuthStateChanged(auth, (user) => {
       if (user) {
         setIsLoggedIn(true);
       } else {
         setIsLoggedIn(false);
       }
+      setCheckingLogin(false);
     });
   };
 
@@ -144,5 +147,6 @@ export const useAuthHooks = () => {
     logoutUser,
     profileUpdate,
     getLoggedInUserInfo,
+    checkingLogin,
   };
 };

@@ -12,7 +12,6 @@ import {
   Container,
   FormControl,
   InputAdornment,
-  InputLabel,
   TextField,
   Typography,
 } from "@mui/material";
@@ -20,18 +19,35 @@ import { Strings } from "@/app/utils/strings";
 import CustomeLoader from "@/app/components/CustomeLoader";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import * as Yup from "yup";
+import { useFormik } from "formik";
+import { isValidString } from "@/app/utils";
+
+const initialValues = {
+  email: "",
+  password: "",
+};
+
+const validationSchema = Yup.object().shape({
+  email: Yup.string().email("Enter valid Email").required("Email is required"),
+  password: Yup.string().required("Password is required"),
+});
 
 export default function Login() {
   const { isLoading, isLoggedIn, loginUser, userLoginErrorMsg } =
     useAuthHooks();
 
-  const [showPassword, setShowPassword] = useState(false);
-
   const router = useRouter();
 
-  const [userInfo, setUserInfo] = useState({
-    email: "star.v.vigneshwaran@gmail.com",
-    password: "Test@123",
+  const [showPassword, setShowPassword] = useState(false);
+
+  const loginForm = useFormik({
+    initialValues,
+    validateOnChange: true,
+    validationSchema,
+    onSubmit: (values: typeof initialValues) => {
+      loginUser(values);
+    },
   });
 
   useEffect(() => {
@@ -43,11 +59,6 @@ export default function Login() {
   const togglePassword = () => {
     setShowPassword(!showPassword);
   };
-
-  const isValidForm =
-    userInfo.email !== "" &&
-    userInfo.password !== "" &&
-    userInfo.email.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/);
 
   return (
     <Container
@@ -89,14 +100,16 @@ export default function Login() {
                 type="email"
                 variant="outlined"
                 label={Strings.email}
-                value={userInfo.email}
+                value={loginForm.values.email}
                 onChange={(e) =>
-                  setUserInfo({
-                    ...userInfo,
-                    email: e.target.value,
-                  })
+                  loginForm.setFieldValue("email", e.target.value)
                 }
                 sx={{ mt: "8px" }}
+                error={
+                  isValidString(loginForm.errors.email) &&
+                  loginForm.touched.email
+                }
+                helperText={loginForm.errors.email}
               />
             </FormControl>
             <FormControl fullWidth margin="dense">
@@ -104,12 +117,9 @@ export default function Login() {
                 variant="outlined"
                 label={Strings.password}
                 type={showPassword ? "text" : "password"}
-                value={userInfo.password}
+                value={loginForm.values.password}
                 onChange={(e) =>
-                  setUserInfo({
-                    ...userInfo,
-                    password: e.target.value,
-                  })
+                  loginForm.setFieldValue("password", e.target.value)
                 }
                 sx={{ mt: "8px" }}
                 InputProps={{
@@ -123,14 +133,13 @@ export default function Login() {
                     </InputAdornment>
                   ),
                 }}
+                error={
+                  isValidString(loginForm.errors.password) &&
+                  loginForm.touched.password
+                }
+                helperText={loginForm.errors.password}
               />
             </FormControl>
-
-            {isLoading ? (
-              <Typography style={{ color: "#000" }}>
-                {Strings.loading}
-              </Typography>
-            ) : null}
             {userLoginErrorMsg !== "" ? (
               <Typography style={{ color: "#d92324", marginTop: "12px" }}>
                 {userLoginErrorMsg}
@@ -141,11 +150,7 @@ export default function Login() {
           <Box sx={{ mt: "24px", textAlign: "center" }}>
             <Button
               onClick={() => {
-                if (isValidForm) {
-                  loginUser(userInfo);
-                } else {
-                  alert("Fix the issues and try again");
-                }
+                loginForm.handleSubmit();
               }}
               variant="outlined"
               sx={{ textTransform: "capitalize" }}

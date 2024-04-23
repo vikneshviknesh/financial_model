@@ -17,12 +17,16 @@ import { useCustomerHooks } from "@/app/hooks/useCustomerHooks";
 import { useSchemeHooks } from "@/app/hooks/useSchemeHooks";
 import { Strings } from "@/app/utils/strings";
 import { AddNewLoanModel } from "@/app/model/transactions";
+import { isValidString } from "@/app/utils";
 
 const addCustomerScheme = Yup.object().shape({
   customer_id: Yup.string().required(),
   scheme_id: Yup.string().required(),
-  amount: Yup.string().required(),
-  interest_rate: Yup.string().required(),
+  amount: Yup.number()
+    .typeError("Enter valid amount")
+    .notOneOf([0], "Should be more than 0")
+    .required("Amount is required"),
+  interest_rate: Yup.string().required("Select interest rate"),
 });
 
 interface iProps {
@@ -95,6 +99,10 @@ function CreateNewLoanForm({ initialValues, closeForm }: iProps) {
                 });
               }
             }}
+            error={
+              isValidString(customerForm.errors.interest_rate) &&
+              customerForm.touched.interest_rate
+            }
           >
             {schemeList.map((scheme) => (
               <MenuItem value={scheme.interest_rate} key={scheme.id}>
@@ -102,6 +110,16 @@ function CreateNewLoanForm({ initialValues, closeForm }: iProps) {
               </MenuItem>
             ))}
           </Select>
+          {isValidString(customerForm.errors.interest_rate) &&
+          customerForm.touched.interest_rate ? (
+            <Typography
+              color={"#d32f2f"}
+              fontSize={"12px"}
+              padding={"4px 12px 0px 12px"}
+            >
+              {customerForm.errors.interest_rate}
+            </Typography>
+          ) : null}
         </FormControl>
 
         <FormControl fullWidth margin="dense">
@@ -117,8 +135,13 @@ function CreateNewLoanForm({ initialValues, closeForm }: iProps) {
             type="number"
             value={customerForm.values.amount}
             onChange={(e) =>
-              customerForm.setFieldValue("amount", e.target.value)
+              customerForm.setFieldValue("amount", parseInt(e.target.value))
             }
+            error={
+              isValidString(customerForm.errors.amount) &&
+              customerForm.touched.amount
+            }
+            helperText={customerForm.errors.amount}
           />
         </FormControl>
 

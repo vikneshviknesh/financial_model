@@ -9,19 +9,22 @@ import { getTimeOfDay } from "@/app/utils/date";
 import { CreateLuckyDrawInterface } from "@/app/model/luckyDraw";
 import CustomeLoader from "@/app/components/CustomeLoader";
 import { useAuthHooks } from "@/app/hooks/useAuthHooks";
+import withAuth from "@/app/components/AuthGuardProvider";
+import moment from "moment";
 
 const LuckyDrawContest = () => {
   const {
     isAddResultLoading,
-    addResultErrorMsg,
     addNewDrawResult,
     drawList,
     isDrawLoading,
-    drawListFetchErrorMsg,
     getAllLuckyDrawResults,
   } = useLuckyDrawHooks();
 
   const { getLoggedInUserInfo, userData } = useAuthHooks();
+
+  const time_of_day = getTimeOfDay();
+  const today = moment().format("DD/MM/YYYY");
 
   useEffect(() => {
     getLoggedInUserInfo();
@@ -30,15 +33,23 @@ const LuckyDrawContest = () => {
 
   const runNewLuckyDraw = () => {
     const selectedNumber = getARandomNumber();
-    const time_of_day = getTimeOfDay();
     const payload: CreateLuckyDrawInterface = {
       selected_numbers: selectedNumber.toString(),
       time_of_day,
     };
-    addNewDrawResult(payload);
+    addNewDrawResult(payload).then(() => {
+      getAllLuckyDrawResults();
+    });
   };
 
   const userName = userData.displayName || "User";
+
+  const allowToFlip =
+    drawList !== undefined
+      ? drawList[today]?.filter(
+          (item: any) => item?.time_of_day === time_of_day
+        )?.length === 0
+      : false;
 
   return (
     <>
@@ -46,22 +57,24 @@ const LuckyDrawContest = () => {
 
       <Container disableGutters sx={{ height: "100vh" }}>
         <CustomeLoader isLoading={isAddResultLoading || isDrawLoading} />
-        <Box
-          sx={{
-            padding: "8px",
-            margin: "8px",
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "flex-end",
-          }}
-        >
-          <Button
-            sx={{ textTransform: "capitalize" }}
-            onClick={runNewLuckyDraw}
+        {allowToFlip ? (
+          <Box
+            sx={{
+              padding: "8px",
+              margin: "8px",
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "flex-end",
+            }}
           >
-            Run Draw
-          </Button>
-        </Box>
+            <Button
+              sx={{ textTransform: "capitalize" }}
+              onClick={runNewLuckyDraw}
+            >
+              Run Draw
+            </Button>
+          </Box>
+        ) : null}
         <Box sx={{ maxHeight: "725px" }}>
           {Object.keys(drawList).length > 0 ? (
             Object.keys(drawList).map((item: any) => {
@@ -125,4 +138,4 @@ const LuckyDrawContest = () => {
   );
 };
 
-export default LuckyDrawContest;
+export default withAuth(LuckyDrawContest);

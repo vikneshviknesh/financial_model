@@ -8,6 +8,7 @@ import { currentDateTime, getFormattedDate } from "../utils/date";
 import {
   CreateLuckyDrawInterface,
   ListLuckyDrawInterface,
+  LuckyDrawResultsModel,
   TimeOfDayInterface,
 } from "../model/luckyDraw";
 
@@ -49,10 +50,12 @@ export const useLuckyDrawHooks = () => {
     setIsDrawLoading(true);
     try {
       const querySnapshot = await getDocs(collection(db, "lucky_draw"));
-      const newData = querySnapshot.docs.map((doc) => ({
-        ...doc.data(),
-        id: doc.id,
-      }));
+      const newData = querySnapshot.docs
+        .map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        }))
+        .reverse();
       const modifiedList = groupListByDate(newData as ListLuckyDrawInterface[]);
       setDrawList(modifiedList);
       setDrawListFetchErrorMsg("");

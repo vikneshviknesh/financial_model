@@ -7,6 +7,7 @@ import EMICard from "@/app/components/EMICard";
 import Header from "@/app/components/Header";
 import { emiData } from "@/app/mockData/emiData";
 import { useAuthHooks } from "@/app/hooks/useAuthHooks";
+import withAuth from "@/app/components/AuthGuardProvider";
 
 function Dashboard() {
   const { getLoggedInUserInfo, userData } = useAuthHooks();
@@ -36,4 +37,4 @@ function Dashboard() {
   );
 }
 
-export default Dashboard;
+export default withAuth(Dashboard);

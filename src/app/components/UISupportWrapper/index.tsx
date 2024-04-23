@@ -1,7 +1,13 @@
 import React from "react";
 import { Box } from "@mui/material";
 
-const UISupportWrapper = ({ children }: { children: React.ReactNode }) => {
+const UISupportWrapper = ({
+  children,
+  style,
+}: {
+  children: React.ReactNode;
+  style?: any;
+}) => {
   return (
     <Box
       sx={{
@@ -11,6 +17,7 @@ const UISupportWrapper = ({ children }: { children: React.ReactNode }) => {
         justifyContent: "center",
         alignItems: "center",
         alignSelf: "center",
+        ...style,
       }}
     >
       {children}
