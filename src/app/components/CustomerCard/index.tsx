@@ -18,7 +18,6 @@ const CustomerCard = (props: iProps) => {
     <Box
       className="card-container"
       onClick={() => {
-        console.log(id);
         router.push(`/pages/admin/CustomerDetails?id=${id}`);
       }}
     >
