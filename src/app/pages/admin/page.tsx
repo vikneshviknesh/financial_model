@@ -82,6 +82,7 @@ function Admin() {
           maxWidth: "500px !important",
           width: "100%",
           padding: "1px",
+          justifyContent: "space-between !important",
         }}
       >
         <Tab
