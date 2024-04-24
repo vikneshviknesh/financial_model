@@ -1,6 +1,8 @@
 import moment from "moment";
 import { TimeOfDayInterface } from "../model/luckyDraw";
 
+export const today = moment().format("DD/MM/YYYY");
+
 export const currentDateTime = moment().format("DD-MM-YYYY HH:MM:SS");
 
 export const getTimeOfDay = (): TimeOfDayInterface => {

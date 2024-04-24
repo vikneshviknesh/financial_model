@@ -1,19 +1,18 @@
 "use client";
 
 import React, { useEffect } from "react";
-import moment from "moment";
 
 import { Footer } from "@/app/components";
 import CustomeLoader from "@/app/components/CustomeLoader";
 import { useLuckyDrawHooks } from "@/app/hooks/useLuckyDraw";
 import { LocalImages } from "@/app/utils";
 import { LuckyDrawResultsModel } from "@/app/model/luckyDraw";
+import { today } from "@/app/utils/date";
+import { Strings } from "@/app/utils/strings";
 
 const LuckyDrawResults = () => {
   const { drawList, getAllLuckyDrawResults, isDrawLoading } =
     useLuckyDrawHooks();
-
-  const today = moment().format("DD/MM/YYYY");
 
   useEffect(() => {
     getAllLuckyDrawResults();
@@ -42,7 +41,7 @@ const LuckyDrawResults = () => {
           fontFamily: "Roboto-bold",
         }}
       >
-        Welcome to {process.env.companyName}
+        {Strings.welcomeTo} {process.env.companyName}
       </h2>
       <div
         style={{

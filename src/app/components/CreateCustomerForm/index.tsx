@@ -6,7 +6,6 @@ import {
   FormControl,
   InputLabel,
   MenuItem,
-  OutlinedInput,
   Select,
   Snackbar,
   TextField,
@@ -21,18 +20,18 @@ import { Strings } from "@/app/utils/strings";
 import {
   CreateCustomerInterface,
   CustomerListInterface,
-  CustomersListInterface,
 } from "@/app/model/customers";
 import { isValidString } from "@/app/utils";
+import { Colors } from "@/app/utils/colors";
 
 const addCustomerScheme = Yup.object().shape({
-  customerName: Yup.string().required("Customer Name is required"),
+  customerName: Yup.string().required(Strings.customerNameRequired),
   mobileNumber: Yup.number()
-    .typeError("Enter valid mobile number")
-    .required("Mobile number is required"),
-  address: Yup.string().required("Address is required"),
-  interest_rate: Yup.string().required("Interest Rate is required"),
-  amount: Yup.string().required("Amount is required"),
+    .typeError(Strings.enterValidMobileNo)
+    .required(Strings.mobileNoRequired),
+  address: Yup.string().required(Strings.addressRequired),
+  interest_rate: Yup.string().required(Strings.selectInterestRate),
+  amount: Yup.string().required(Strings.amountRequired),
 });
 
 interface iProps {
@@ -103,7 +102,7 @@ function CreateCustomerForm({ initialValues, closeForm }: iProps) {
   };
 
   return (
-    <Box sx={{ color: "#000" }}>
+    <Box sx={{ color: Colors.black }}>
       <Box sx={{ display: "flex", flexDirection: "row" }}>
         <Typography
           sx={{
@@ -113,7 +112,7 @@ function CreateCustomerForm({ initialValues, closeForm }: iProps) {
             fontWeight: "bold",
           }}
         >
-          Add Customer
+          {Strings.addCustomer}
         </Typography>
         <HighlightOffIcon onClick={() => closeForm("")} />
       </Box>
@@ -124,7 +123,7 @@ function CreateCustomerForm({ initialValues, closeForm }: iProps) {
             label={Strings.customerName}
             sx={{
               border: "1px solid #fff",
-              color: "#fff",
+              color: Colors.white,
               borderRadius: "8px",
               mt: "8px",
             }}
@@ -152,7 +151,7 @@ function CreateCustomerForm({ initialValues, closeForm }: iProps) {
             label={Strings.mobileNo}
             sx={{
               border: "1px solid #fff",
-              color: "#fff",
+              color: Colors.white,
               borderRadius: "8px",
               mt: "8px",
             }}
@@ -180,7 +179,7 @@ function CreateCustomerForm({ initialValues, closeForm }: iProps) {
             label={Strings.address}
             sx={{
               border: "1px solid #fff",
-              color: "#fff",
+              color: Colors.white,
               borderRadius: "8px",
               mt: "8px",
             }}
@@ -251,7 +250,7 @@ function CreateCustomerForm({ initialValues, closeForm }: iProps) {
           <TextField
             sx={{
               border: "1px solid #fff",
-              color: "#fff",
+              color: Colors.white,
               borderRadius: "8px",
               mt: "8px",
             }}
@@ -280,13 +279,15 @@ function CreateCustomerForm({ initialValues, closeForm }: iProps) {
           onClick={customerForm.submitForm}
         >
           <Button variant="outlined" sx={{ textTransform: "capitalize" }}>
-            Submit
+            {Strings.submit}
           </Button>
         </Box>
       </>
-      {isLoading ? <p style={{ color: "#000" }}>{Strings.loading}</p> : null}
+      {isLoading ? (
+        <p style={{ color: Colors.black }}>{Strings.loading}</p>
+      ) : null}
       {customerCreateErrorMsg !== "" ? (
-        <p style={{ color: "#000" }}>{customerCreateErrorMsg}</p>
+        <p style={{ color: Colors.black }}>{customerCreateErrorMsg}</p>
       ) : null}
       <Snackbar
         open={snackbarData.visible}

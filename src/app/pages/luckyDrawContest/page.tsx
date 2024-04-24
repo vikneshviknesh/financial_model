@@ -5,12 +5,12 @@ import { Box, Button, Card, Container, Typography } from "@mui/material";
 import Header from "@/app/components/Header";
 import { getARandomNumber } from "@/app/utils/generator";
 import { useLuckyDrawHooks } from "@/app/hooks/useLuckyDraw";
-import { getTimeOfDay } from "@/app/utils/date";
+import { getTimeOfDay, today } from "@/app/utils/date";
 import { CreateLuckyDrawInterface } from "@/app/model/luckyDraw";
 import CustomeLoader from "@/app/components/CustomeLoader";
 import { useAuthHooks } from "@/app/hooks/useAuthHooks";
 import withAuth from "@/app/components/AuthGuardProvider";
-import moment from "moment";
+import { Strings } from "@/app/utils/strings";
 
 const LuckyDrawContest = () => {
   const {
@@ -24,7 +24,6 @@ const LuckyDrawContest = () => {
   const { getLoggedInUserInfo, userData } = useAuthHooks();
 
   const time_of_day = getTimeOfDay();
-  const today = moment().format("DD/MM/YYYY");
 
   useEffect(() => {
     getLoggedInUserInfo();
@@ -80,7 +79,7 @@ const LuckyDrawContest = () => {
               sx={{ textTransform: "capitalize" }}
               onClick={runNewLuckyDraw}
             >
-              Run Draw
+              {Strings.runDraw}
             </Button>
           </Box>
         ) : null}
@@ -105,7 +104,7 @@ const LuckyDrawContest = () => {
                         fontSize: "16px",
                       }}
                     >
-                      Dated:
+                      {Strings.dated}:
                     </Typography>
                     <Typography ml={"8px"}>{item}</Typography>
                   </Box>
@@ -138,7 +137,7 @@ const LuckyDrawContest = () => {
               }}
             >
               <Typography>
-                {isDrawLoading ? "Fetching..." : "No Data Found"}
+                {isDrawLoading ? Strings.fetching : Strings.noDataFound}
               </Typography>
             </Box>
           )}

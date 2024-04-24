@@ -1,6 +1,7 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
 import { Constants } from "@/app/utils/constants";
+import { Strings } from "@/app/utils/strings";
 
 interface iProps {
   name: string;
@@ -16,7 +17,7 @@ const EMICard = (props: iProps) => {
     <Box className="card-container">
       <Typography fontSize={"18px"}>{name}</Typography>
       <Typography my={"8px"} fontSize={"14px"}>
-        Total Amount: {`${Constants.currencySymbol} ${totalAmount}`}
+        {Strings.totalAmount}: {`${Constants.currencySymbol} ${totalAmount}`}
       </Typography>
       <Box
         sx={{
@@ -26,9 +27,11 @@ const EMICard = (props: iProps) => {
         }}
       >
         <Typography fontSize={"14px"}>
-          Due: {`${Constants.currencySymbol} ${dueAmount}`}
+          {Strings.due}: {`${Constants.currencySymbol} ${dueAmount}`}
         </Typography>
-        <Typography fontSize={"14px"}>Date: {nextDueDate}</Typography>
+        <Typography fontSize={"14px"}>
+          {Strings.date}: {nextDueDate}
+        </Typography>
       </Box>
     </Box>
   );

@@ -23,10 +23,10 @@ const addCustomerScheme = Yup.object().shape({
   customer_id: Yup.string().required(),
   scheme_id: Yup.string().required(),
   amount: Yup.number()
-    .typeError("Enter valid amount")
-    .notOneOf([0], "Should be more than 0")
-    .required("Amount is required"),
-  interest_rate: Yup.string().required("Select interest rate"),
+    .typeError(Strings.enterValidAmount)
+    .notOneOf([0], Strings.shouldBeMoreThanZero)
+    .required(Strings.amountRequired),
+  interest_rate: Yup.string().required(Strings.selectInterestRate),
 });
 
 interface iProps {
@@ -57,7 +57,6 @@ function CreateNewLoanForm({ initialValues, closeForm }: iProps) {
   const addCustomer = (values: typeof initialValues) => {
     addNewLoanToCustomer(values)
       .then((response) => {
-        console.log("response", response);
         closeForm("refresh");
       })
       .catch((error) => {
@@ -76,7 +75,7 @@ function CreateNewLoanForm({ initialValues, closeForm }: iProps) {
             fontWeight: "bold",
           }}
         >
-          Add New Loan
+          {Strings.addNewLoan}
         </Typography>
         <HighlightOffIcon onClick={() => closeForm("")} />
       </Box>
@@ -159,7 +158,7 @@ function CreateNewLoanForm({ initialValues, closeForm }: iProps) {
           onClick={customerForm.submitForm}
         >
           <Button variant="outlined" sx={{ textTransform: "capitalize" }}>
-            Submit
+            {Strings.submit}
           </Button>
         </Box>
       </>

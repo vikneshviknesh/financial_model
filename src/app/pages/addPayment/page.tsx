@@ -29,6 +29,7 @@ import { CustomersListInterface } from "@/app/model/customers";
 import withAuth from "@/app/components/AuthGuardProvider";
 import { isValidString } from "@/app/utils";
 import CustomeLoader from "@/app/components/CustomeLoader";
+import { Strings } from "@/app/utils/strings";
 
 const initialValues = {
   customer_name: "",
@@ -200,7 +201,7 @@ const AddPayment = () => {
                     <TextField
                       {...params}
                       value={addPaymentForm.values.customer_name}
-                      placeholder="Select Customer"
+                      placeholder={Strings.selectCustomer}
                       sx={{
                         border: "1px solid #fff",
                         borderRadius: "8px",
@@ -227,11 +228,11 @@ const AddPayment = () => {
 
               <FormControl fullWidth sx={{ mt: "8px" }}>
                 <InputLabel id="demo-simple-select-label">
-                  Select Loan
+                  {Strings.selectLoan}
                 </InputLabel>
                 <Select
                   variant="outlined"
-                  label={"Loan"}
+                  label={Strings.loan}
                   value={addPaymentForm.values.loan_id}
                   onChange={(e) => {
                     if (e.target.value !== "Select") {
@@ -267,7 +268,7 @@ const AddPayment = () => {
                       </MenuItem>
                     ))
                   ) : (
-                    <MenuItem value={"Select"}>Select</MenuItem>
+                    <MenuItem value={"Select"}>{Strings.select}</MenuItem>
                   )}
                 </Select>
                 {isValidString(addPaymentForm.errors.loan_id) &&
@@ -292,12 +293,12 @@ const AddPayment = () => {
                   }}
                   variant="outlined"
                   type="number"
-                  label="Amount"
+                  label={Strings.amount}
                   value={addPaymentForm.values.amount}
                   onChange={(e) =>
                     addPaymentForm.setFieldValue("amount", e.target.value)
                   }
-                  placeholder="Amount"
+                  placeholder={Strings.amount}
                   disabled
                   error={
                     isValidString(addPaymentForm.errors.amount) &&
@@ -321,7 +322,7 @@ const AddPayment = () => {
                   variant="outlined"
                   sx={{ textTransform: "capitalize" }}
                 >
-                  Submit
+                  {Strings.submit}
                 </Button>
               </Box>
             </Box>

@@ -63,9 +63,11 @@ function LoanDetails() {
                 color: "#000",
               }}
             >
-              <Typography>Total Amount: {loanDetails.loan_amount}</Typography>
               <Typography>
-                Loan Status:{" "}
+                {Strings.totalAmount}: {loanDetails.loan_amount}
+              </Typography>
+              <Typography>
+                {Strings.loanStatus}:{" "}
                 {loanDetails.is_completed ? "Completed" : "On going"}
               </Typography>
             </Box>

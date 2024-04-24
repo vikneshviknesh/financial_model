@@ -2,6 +2,7 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
 import { useRouter } from "next/navigation";
+import { Strings } from "@/app/utils/strings";
 
 interface iProps {
   name: string;
@@ -23,11 +24,11 @@ const CustomerCard = (props: iProps) => {
     >
       <Typography fontSize={"22px"}>{name}</Typography>
       <Box sx={{ display: "flex", flexDirection: "row", my: "8px" }}>
-        <Typography fontWeight={"bold"}>Mobile Number:</Typography>
+        <Typography fontWeight={"bold"}>{Strings.mobileNo}:</Typography>
         <Typography ml={"8px"}>{mobileNumber}</Typography>
       </Box>
       <Box sx={{ display: "flex", flexDirection: "row", my: "8px" }}>
-        <Typography fontWeight={"bold"}>Address:</Typography>
+        <Typography fontWeight={"bold"}>{Strings.address}:</Typography>
         <Typography ml={"8px"}>{address}</Typography>
       </Box>
     </Box>

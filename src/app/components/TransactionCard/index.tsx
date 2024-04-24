@@ -3,6 +3,7 @@ import React from "react";
 import { Box, Typography } from "@mui/material";
 import { LoanModel } from "@/app/model/transactions";
 import { useRouter } from "next/navigation";
+import { Strings } from "@/app/utils/strings";
 
 const LoanCard = (props: LoanModel) => {
   const router = useRouter();
@@ -23,11 +24,11 @@ const LoanCard = (props: LoanModel) => {
       }}
     >
       <Box sx={{ display: "flex", flexDirection: "row", my: "8px" }}>
-        <Typography fontWeight={"bold"}>Loan Amount:</Typography>
+        <Typography fontWeight={"bold"}>{Strings.loanAmount}:</Typography>
         <Typography ml={"8px"}>{loan_amount}</Typography>
       </Box>
       <Box sx={{ display: "flex", flexDirection: "row", my: "8px" }}>
-        <Typography fontWeight={"bold"}>Created On:</Typography>
+        <Typography fontWeight={"bold"}>{Strings.createdOn}:</Typography>
         <Typography ml={"8px"}>{created_at}</Typography>
       </Box>
     </Box>
