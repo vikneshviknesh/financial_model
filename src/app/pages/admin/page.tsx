@@ -73,7 +73,6 @@ function Admin() {
           width: "100%",
           padding: "1px",
         }}
-        style={{ justifyContent: "space-between !important" }}
       >
         <Tab
           icon={<HomeIcon sx={{ fontSize: "42px" }} />}
