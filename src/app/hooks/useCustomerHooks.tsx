@@ -23,7 +23,7 @@ import { useLoanHooks } from "./useLoanHooks";
 
 export const useCustomerHooks = () => {
   const { addTransactions } = useTransactionHooks();
-  const { addNewLoan, checkAndSettleUpLoan } = useLoanHooks();
+  const { addNewLoan } = useLoanHooks();
 
   const [customerCreateErrorMsg, setCustomerCreateErrorMsg] = useState("");
   const [customersList, setCustomersList] = useState<CustomersListInterface[]>(

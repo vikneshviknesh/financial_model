@@ -46,9 +46,11 @@ const LuckyDrawContest = () => {
 
   const allowToFlip =
     drawList !== undefined
-      ? drawList[today]?.filter(
-          (item: any) => item?.time_of_day === time_of_day
-        )?.length === 0
+      ? Object.keys(drawList).length > 0
+        ? drawList[today]?.filter(
+            (item: any) => item?.time_of_day === time_of_day
+          )?.length === 0
+        : true
       : false;
 
   return (
