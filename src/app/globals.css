@@ -52,7 +52,7 @@ body {
   width: 100%;
   padding: 4px;
   /* max-width: 500px; */
-  justify-content: space-between;
+  justify-content: space-between !important;
 }
 
 .tab-container button {

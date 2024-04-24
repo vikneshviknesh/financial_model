@@ -126,7 +126,7 @@ const AddPayment = () => {
       addPaymentForm.values.loan_amount,
       (status: boolean) => {
         if (status) {
-          getCustomers();
+          listAllLoans({ is_completed: false });
           setSnackbarData({ visible: true, message: "Success" });
         } else {
           setSnackbarData({ visible: true, message: "Failure" });
