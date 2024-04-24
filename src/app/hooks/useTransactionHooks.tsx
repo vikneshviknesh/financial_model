@@ -79,7 +79,7 @@ export const useTransactionHooks = () => {
         }))
         .filter((item: any) => item?.loan_id === loanId);
       setTransactionsFetching(false);
-      setTransactionsList(newData as TransactionModel[]);
+      setTransactionsList(newData as any);
       setTransactionsListFetchErrorMsg("");
     } catch (error: any) {
       setTransactionsFetching(false);
