@@ -19,6 +19,7 @@ import { Strings } from "@/app/utils/strings";
 import UISupportWrapper from "@/app/components/UISupportWrapper";
 import { customerCreateInitialData } from "@/app/mockData/customers";
 import withAuth from "@/app/components/AuthGuardProvider";
+import CustomeLoader from "@/app/components/CustomeLoader";
 
 const CustomersList = () => {
   const { listAllCustomers, customersList, isListFetching, listFetchErrorMsg } =
@@ -50,9 +51,7 @@ const CustomersList = () => {
         }}
       >
         {isListFetching ? (
-          <UISupportWrapper>
-            <CircularProgress />
-          </UISupportWrapper>
+          <CustomeLoader isLoading={isListFetching} />
         ) : listFetchErrorMsg ? (
           <UISupportWrapper>
             <Typography>{listFetchErrorMsg}</Typography>

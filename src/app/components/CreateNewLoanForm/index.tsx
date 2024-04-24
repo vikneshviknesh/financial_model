@@ -50,16 +50,20 @@ function CreateNewLoanForm({ initialValues, closeForm }: iProps) {
     initialValues,
     validationSchema: addCustomerScheme,
     onSubmit: (values: typeof initialValues) => {
-      addNewLoanToCustomer(values)
-        .then((response) => {
-          console.log("response", response);
-          closeForm("refresh");
-        })
-        .catch((error) => {
-          console.log("error", error);
-        });
+      addCustomer(values);
     },
   });
+
+  const addCustomer = (values: typeof initialValues) => {
+    addNewLoanToCustomer(values)
+      .then((response) => {
+        console.log("response", response);
+        closeForm("refresh");
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
+  };
 
   return (
     <Box sx={{ color: "#000" }}>

@@ -12,7 +12,7 @@ const UISupportWrapper = ({
     <Box
       sx={{
         flex: 1,
-        height: "90%",
+        minHeight: "calc(100vh - 64px - 56px)",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",

@@ -51,7 +51,6 @@ body {
   background-color: 	#a4d4d7;
   width: 100%;
   padding: 4px;
-  /* max-width: 500px; */
   justify-content: space-between !important;
 }
 
@@ -61,7 +60,7 @@ body {
 }
 
 .tab-container .MuiTabs-flexContainer.css-heg063-MuiTabs-flexContainer{
-  justify-content: space-around !important;
+  justify-content: space-between !important;
 }
 
 .tab-container .MuiTabs-flexContainer.css-heg063-MuiTabs-flexContainer > button{

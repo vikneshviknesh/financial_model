@@ -28,6 +28,7 @@ import { useLoanHooks } from "@/app/hooks/useLoanHooks";
 import { CustomersListInterface } from "@/app/model/customers";
 import withAuth from "@/app/components/AuthGuardProvider";
 import { isValidString } from "@/app/utils";
+import CustomeLoader from "@/app/components/CustomeLoader";
 
 const initialValues = {
   customer_name: "",
@@ -165,9 +166,7 @@ const AddPayment = () => {
         }}
       >
         {isLoanListFetching ? (
-          <UISupportWrapper>
-            <CircularProgress />
-          </UISupportWrapper>
+          <CustomeLoader isLoading={isLoanListFetching} />
         ) : loanListFetchErrorMsg ? (
           <UISupportWrapper>
             <Typography>{loanListFetchErrorMsg}</Typography>

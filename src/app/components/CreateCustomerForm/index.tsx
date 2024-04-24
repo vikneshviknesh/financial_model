@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -8,6 +8,7 @@ import {
   MenuItem,
   OutlinedInput,
   Select,
+  Snackbar,
   TextField,
   Typography,
 } from "@mui/material";
@@ -17,7 +18,11 @@ import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import { useCustomerHooks } from "@/app/hooks/useCustomerHooks";
 import { useSchemeHooks } from "@/app/hooks/useSchemeHooks";
 import { Strings } from "@/app/utils/strings";
-import { CreateCustomerInterface } from "@/app/model/customers";
+import {
+  CreateCustomerInterface,
+  CustomerListInterface,
+  CustomersListInterface,
+} from "@/app/model/customers";
 import { isValidString } from "@/app/utils";
 
 const addCustomerScheme = Yup.object().shape({
@@ -38,8 +43,27 @@ interface iProps {
 function CreateCustomerForm({ initialValues, closeForm }: iProps) {
   const { listAllScheme, schemeList } = useSchemeHooks();
 
-  const { isLoading, addNewCustomer, customerCreateErrorMsg } =
-    useCustomerHooks();
+  const {
+    isLoading,
+    addNewCustomer,
+    customerCreateErrorMsg,
+    getCustomersList,
+  } = useCustomerHooks();
+
+  const [snackbarData, setSnackbarData] = useState({
+    visible: false,
+    message: "",
+  });
+
+  const [customersList, setCustomersList] = useState<CustomerListInterface[]>(
+    []
+  );
+
+  useEffect(() => {
+    getCustomersList().then((response) => {
+      setCustomersList(response as CustomerListInterface[]);
+    });
+  }, []);
 
   useEffect(() => {
     if (schemeList.length === 0) {
@@ -51,16 +75,32 @@ function CreateCustomerForm({ initialValues, closeForm }: iProps) {
     initialValues,
     validationSchema: addCustomerScheme,
     onSubmit: (values: typeof initialValues) => {
+      addCustomer(values);
+    },
+  });
+
+  const addCustomer = (values: typeof initialValues) => {
+    const isExistingCustomer =
+      customersList.filter(
+        (item: CustomerListInterface) =>
+          item.mobileNumber === values.mobileNumber
+      ).length > 0;
+    if (isExistingCustomer) {
+      setSnackbarData({ visible: true, message: "Customer Already Exists" });
+    } else {
       addNewCustomer(values)
-        .then((response) => {
-          console.log("response", response);
+        .then(() => {
           closeForm("refresh");
         })
         .catch((error) => {
           console.log("error", error);
         });
-    },
-  });
+    }
+  };
+
+  const handleClose = () => {
+    setSnackbarData({ visible: false, message: "" });
+  };
 
   return (
     <Box sx={{ color: "#000" }}>
@@ -248,6 +288,13 @@ function CreateCustomerForm({ initialValues, closeForm }: iProps) {
       {customerCreateErrorMsg !== "" ? (
         <p style={{ color: "#000" }}>{customerCreateErrorMsg}</p>
       ) : null}
+      <Snackbar
+        open={snackbarData.visible}
+        autoHideDuration={1000}
+        onClose={handleClose}
+        message={snackbarData.message}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      />
     </Box>
   );
 }

@@ -128,6 +128,7 @@ const LuckyDrawContest = () => {
           ) : (
             <Box
               sx={{
+                height: "calc(100vh - 64px - 56px)",
                 display: "flex",
                 flexDirection: "row",
                 justifyContent: "center",

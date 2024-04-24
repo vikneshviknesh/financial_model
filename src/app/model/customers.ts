@@ -15,3 +15,12 @@ export interface CustomersListInterface extends CreateCustomerInterface {
   created_at: string;
   updated_at: string;
 }
+
+export interface CustomerListInterface {
+  address: string;
+  created_at: string;
+  customerId: string;
+  customerName: string;
+  mobileNumber: string;
+  updated_at: string;
+}

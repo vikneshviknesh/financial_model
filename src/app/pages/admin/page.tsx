@@ -1,22 +1,12 @@
 "use client";
 
 import React, { SyntheticEvent, useState } from "react";
-import {
-  Box,
-  Container,
-  Divider,
-  Drawer,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-} from "@mui/material";
+import { Container } from "@mui/material";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import HomeIcon from "@mui/icons-material/Home";
 import PersonPinIcon from "@mui/icons-material/PersonPin";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import Dashboard from "./Dashboard/page";
 import AddPayment from "../addPayment/page";
 import CustomersList from "../customers/page";
 import LuckyDrawContest from "../luckyDrawContest/page";
@@ -82,8 +72,8 @@ function Admin() {
           maxWidth: "500px !important",
           width: "100%",
           padding: "1px",
-          justifyContent: "space-between !important",
         }}
+        style={{ justifyContent: "space-between !important" }}
       >
         <Tab
           icon={<HomeIcon sx={{ fontSize: "42px" }} />}

@@ -1,13 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import {
-  Box,
-  CircularProgress,
-  Container,
-  Modal,
-  Typography,
-} from "@mui/material";
+import { Box, Container, Modal, Typography } from "@mui/material";
 import AddCircle from "@mui/icons-material/AddCircle";
 
 import { useTransactionHooks } from "@/app/hooks/useTransactionHooks";
@@ -20,6 +14,7 @@ import CreateNewLoanForm from "@/app/components/CreateNewLoanForm";
 import withAuth from "@/app/components/AuthGuardProvider";
 import { isValidString } from "@/app/utils";
 import LoanCard from "@/app/components/TransactionCard";
+import CustomeLoader from "@/app/components/CustomeLoader";
 
 function CustomerDetails() {
   const searchParams = useSearchParams();
@@ -92,9 +87,7 @@ function CustomerDetails() {
           </Box>
         ) : null}
         {isFetching ? (
-          <UISupportWrapper>
-            <CircularProgress />
-          </UISupportWrapper>
+          <CustomeLoader isLoading={isFetching} />
         ) : loanInfoFetchErrorMsg ? (
           <UISupportWrapper>
             <Typography>{loanInfoFetchErrorMsg}</Typography>

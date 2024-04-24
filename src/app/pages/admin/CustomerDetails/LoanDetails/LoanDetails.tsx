@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { Box, CircularProgress, Container, Typography } from "@mui/material";
+import { Box, Container, Typography } from "@mui/material";
 
 import { useTransactionHooks } from "@/app/hooks/useTransactionHooks";
 import Header from "@/app/components/Header";
@@ -12,6 +12,7 @@ import withAuth from "@/app/components/AuthGuardProvider";
 import { isValidString } from "@/app/utils";
 import TransactionCard from "@/app/components/LoanCard";
 import { useLoanHooks } from "@/app/hooks/useLoanHooks";
+import CustomeLoader from "@/app/components/CustomeLoader";
 
 function LoanDetails() {
   const searchParams = useSearchParams();
@@ -72,9 +73,9 @@ function LoanDetails() {
         ) : null}
 
         {isTransactionsFetching || loanDetailsFetching ? (
-          <UISupportWrapper>
-            <CircularProgress />
-          </UISupportWrapper>
+          <CustomeLoader
+            isLoading={isTransactionsFetching || loanDetailsFetching}
+          />
         ) : transactionsListFetchErrorMsg ? (
           <UISupportWrapper>
             <Typography>{transactionsListFetchErrorMsg}</Typography>
