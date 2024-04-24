@@ -38,7 +38,6 @@ function CustomTabPanel(props: TabPanelProps) {
       id={`simple-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
       {...other}
-      // style={{ maxHeight: "250px" }}
     >
       {value === index && children ? children : null}
     </div>
@@ -61,22 +60,29 @@ function Admin() {
 
   return (
     <Container disableGutters sx={{ maxWidth: "500px !important" }}>
-      <CustomTabPanel value={value} index={0}>
-        <LuckyDrawContest />
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={1}>
-        <AddPayment />
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={2}>
-        <CustomersList />
-      </CustomTabPanel>
+      <Container disableGutters>
+        <CustomTabPanel value={value} index={0}>
+          <LuckyDrawContest />
+        </CustomTabPanel>
 
+        <CustomTabPanel value={value} index={1}>
+          <AddPayment />
+        </CustomTabPanel>
+
+        <CustomTabPanel value={value} index={2}>
+          <CustomersList />
+        </CustomTabPanel>
+      </Container>
       <Tabs
         value={value}
         onChange={handleChange}
         aria-label="basic tabs example"
         className="tab-container"
-        sx={{ maxWidth: "500px !important", height: "7vh" }}
+        sx={{
+          maxWidth: "500px !important",
+          width: "100%",
+          padding: "1px",
+        }}
       >
         <Tab
           icon={<HomeIcon sx={{ fontSize: "42px" }} />}

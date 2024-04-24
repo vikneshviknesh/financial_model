@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import {
   Box,
   CircularProgress,
+  Container,
   Modal,
   TableContainer,
   Typography,
@@ -41,7 +42,13 @@ const CustomersList = () => {
   return (
     <>
       <Header title="Customers" showBackBtn={false} />
-      <TableContainer sx={{ height: "86vh" }}>
+      <Container
+        sx={{
+          minHeight: "calc(100vh - 64px - 56px)",
+          maxHeight: "calc(100vh - 64px - 56px)",
+          overflow: "auto",
+        }}
+      >
         {isListFetching ? (
           <UISupportWrapper>
             <CircularProgress />
@@ -89,7 +96,7 @@ const CustomersList = () => {
             />
           </Box>
         </Modal>
-      </TableContainer>
+      </Container>
     </>
   );
 };

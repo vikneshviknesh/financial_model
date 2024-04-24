@@ -55,7 +55,14 @@ const LuckyDrawContest = () => {
     <>
       <Header title={`Welcome ${userName}`} showBackBtn={false} />
 
-      <Container disableGutters sx={{ height: "100vh" }}>
+      <Container
+        disableGutters
+        sx={{
+          minHeight: "calc(100vh - 64px - 56px)",
+          maxHeight: "calc(100vh - 64px - 56px)",
+          overflow: "auto",
+        }}
+      >
         <CustomeLoader isLoading={isAddResultLoading || isDrawLoading} />
         {allowToFlip ? (
           <Box
@@ -75,7 +82,7 @@ const LuckyDrawContest = () => {
             </Button>
           </Box>
         ) : null}
-        <Box sx={{ maxHeight: "725px" }}>
+        <Box>
           {Object.keys(drawList).length > 0 ? (
             Object.keys(drawList).map((item: any) => {
               return (

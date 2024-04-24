@@ -1,13 +1,27 @@
 "use client";
 import React from "react";
 import { Box, Typography } from "@mui/material";
-import { TransactionModel } from "@/app/model/transactions";
+import { LoanModel } from "@/app/model/transactions";
+import { useRouter } from "next/navigation";
 
-const TransactionCard = (props: TransactionModel) => {
-  const { created_at, customer_id, id, loan_amount, scheme_id, updated_at } =
-    props;
+const LoanCard = (props: LoanModel) => {
+  const router = useRouter();
+
+  const {
+    created_at,
+    customer_id,
+    id: loan_id,
+    loan_amount,
+    scheme_id,
+    updated_at,
+  } = props;
   return (
-    <Box className="card-container">
+    <Box
+      className="card-container"
+      onClick={() => {
+        router.push(`/pages/admin/CustomerDetails/LoanDetails?id=${loan_id}`);
+      }}
+    >
       <Box sx={{ display: "flex", flexDirection: "row", my: "8px" }}>
         <Typography fontWeight={"bold"}>Loan Amount:</Typography>
         <Typography ml={"8px"}>{loan_amount}</Typography>
@@ -20,4 +34,4 @@ const TransactionCard = (props: TransactionModel) => {
   );
 };
 
-export default TransactionCard;
+export default LoanCard;

@@ -15,11 +15,11 @@ import Header from "@/app/components/Header";
 import UISupportWrapper from "@/app/components/UISupportWrapper";
 import { Strings } from "@/app/utils/strings";
 import { useSearchParams } from "next/navigation";
-import TransactionCard from "@/app/components/TransactionCard";
 import { useCustomerHooks } from "@/app/hooks/useCustomerHooks";
 import CreateNewLoanForm from "@/app/components/CreateNewLoanForm";
 import withAuth from "@/app/components/AuthGuardProvider";
 import { isValidString } from "@/app/utils";
+import LoanCard from "@/app/components/TransactionCard";
 
 function CustomerDetails() {
   const searchParams = useSearchParams();
@@ -65,7 +65,13 @@ function CustomerDetails() {
         showUserCircle={false}
       />
 
-      <Container>
+      <Container
+        sx={{
+          minHeight: "calc(100vh -  56px)",
+          maxHeight: "calc(100vh -  56px)",
+          overflow: "auto",
+        }}
+      >
         {isValidString(customerName) ? (
           <Box
             sx={{
@@ -100,7 +106,7 @@ function CustomerDetails() {
         ) : (
           <Box sx={{ flex: 1 }}>
             {loanList.map((loanInfo) => (
-              <TransactionCard
+              <LoanCard
                 created_at={loanInfo.created_at}
                 customer_id={loanInfo.customer_id}
                 id={loanInfo.id}

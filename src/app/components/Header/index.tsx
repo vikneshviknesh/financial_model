@@ -108,7 +108,6 @@ const Header = (props: iProps) => {
         flexDirection: "row",
         alignItems: "center",
         backgroundColor: "#19a189",
-        height: "7vh",
       }}
     >
       {showBackBtn ? <ArrowBackIosIcon onClick={handleBackClick} /> : null}

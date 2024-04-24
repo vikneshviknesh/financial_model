@@ -35,6 +35,7 @@ const initialValues = {
   customer_id: "",
   scheme_id: "",
   loan_id: "",
+  loan_amount: "",
 };
 
 const validationSchema = Yup.object().shape({
@@ -67,6 +68,7 @@ const AddPayment = () => {
     }[]
   >([]);
   [];
+
   const [snackbarData, setSnackbarData] = useState({
     visible: false,
     message: "",
@@ -74,8 +76,10 @@ const AddPayment = () => {
 
   useEffect(() => {
     schemeList.length === 0 ? listAllScheme() : null;
-    loanList.length === 0 ? listAllLoans() : null;
+    loanList.length === 0 ? listAllLoans({ is_completed: false }) : null;
+  }, [schemeList]);
 
+  useEffect(() => {
     if (customersList.length > 0) {
       const formattedCustomerList = customersList.map((customer) => ({
         label: `${customer.customerName} - ${customer.mobileNumber}`,
@@ -87,11 +91,15 @@ const AddPayment = () => {
       }));
       setCustomerPaymentList(formattedCustomerList);
     } else {
-      getCustomersList().then((response) => {
-        setCustomersList(response as CustomersListInterface[]);
-      });
+      getCustomers();
     }
-  }, [customersList, schemeList]);
+  }, [customersList]);
+
+  const getCustomers = () => {
+    getCustomersList().then((response) => {
+      setCustomersList(response as CustomersListInterface[]);
+    });
+  };
 
   const addPaymentForm = useFormik({
     initialValues,
@@ -113,13 +121,18 @@ const AddPayment = () => {
     amount_paid: string;
     loan_id: string;
   }) => {
-    addTransactions(updatedPayload, (status: boolean) => {
-      if (status) {
-        setSnackbarData({ visible: true, message: "Success" });
-      } else {
-        setSnackbarData({ visible: true, message: "Failure" });
+    addTransactions(
+      updatedPayload,
+      addPaymentForm.values.loan_amount,
+      (status: boolean) => {
+        if (status) {
+          getCustomers();
+          setSnackbarData({ visible: true, message: "Success" });
+        } else {
+          setSnackbarData({ visible: true, message: "Failure" });
+        }
       }
-    });
+    );
   };
 
   const handleClose = () => {
@@ -141,170 +154,189 @@ const AddPayment = () => {
     ) || [];
 
   return (
-    <Box
-      sx={{
-        flex: 1,
-        display: "flex",
-        flexDirection: "column",
-        height: "100vh",
-      }}
-    >
+    <>
       <Header title=" Register a Payment" showBackBtn={false} />
-      {isLoanListFetching ? (
-        <UISupportWrapper>
-          <CircularProgress />
-        </UISupportWrapper>
-      ) : loanListFetchErrorMsg ? (
-        <UISupportWrapper>
-          <Typography>{loanListFetchErrorMsg}</Typography>
-        </UISupportWrapper>
-      ) : (
-        <Container>
-          <Box
-            sx={{
-              flex: 2,
-              margin: "8px",
-              borderRadius: "8px",
-              padding: "12px",
-              justifyContent: "center",
-            }}
-          >
-            <FormControl fullWidth margin="dense">
-              <Typography id="demo-simple-select-label">
-                Customer Name
-              </Typography>
+      <Container
+        disableGutters
+        sx={{
+          minHeight: "calc(100vh - 64px - 56px)",
+          maxHeight: "calc(100vh - 64px - 56px)",
+          overflow: "auto",
+        }}
+      >
+        {isLoanListFetching ? (
+          <UISupportWrapper>
+            <CircularProgress />
+          </UISupportWrapper>
+        ) : loanListFetchErrorMsg ? (
+          <UISupportWrapper>
+            <Typography>{loanListFetchErrorMsg}</Typography>
+          </UISupportWrapper>
+        ) : (
+          <Container>
+            <Box
+              sx={{
+                flex: 2,
+                margin: "8px",
+                borderRadius: "8px",
+                padding: "12px",
+                justifyContent: "center",
+              }}
+            >
+              <FormControl fullWidth margin="dense">
+                <Autocomplete
+                  disablePortal
+                  ref={autoC}
+                  id="combo-box-demo"
+                  options={customerPaymentList}
+                  fullWidth
+                  onChange={(e, value) => {
+                    addPaymentForm.setValues({
+                      ...addPaymentForm.values,
+                      customer_name: value?.value as string,
+                      customer_id: value?.customer_id as string,
+                    });
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      value={addPaymentForm.values.customer_name}
+                      placeholder="Select Customer"
+                      sx={{
+                        border: "1px solid #fff",
+                        borderRadius: "8px",
+                        mt: "8px",
+                      }}
+                      error={
+                        isValidString(addPaymentForm.errors.customer_name) &&
+                        addPaymentForm.touched.customer_name
+                      }
+                    />
+                  )}
+                />
+                {isValidString(addPaymentForm.errors.customer_name) &&
+                addPaymentForm.touched.customer_name ? (
+                  <Typography
+                    color={"#d32f2f"}
+                    fontSize={"12px"}
+                    padding={"4px 12px 0px 12px"}
+                  >
+                    {addPaymentForm.errors.customer_name}
+                  </Typography>
+                ) : null}
+              </FormControl>
 
-              <Autocomplete
-                disablePortal
-                ref={autoC}
-                id="combo-box-demo"
-                options={customerPaymentList}
-                fullWidth
-                onChange={(e, value) => {
-                  addPaymentForm.setValues({
-                    ...addPaymentForm.values,
-                    customer_name: value?.value as string,
-                    customer_id: value?.customer_id as string,
-                  });
-                }}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    value={addPaymentForm.values.customer_name}
-                    placeholder="Select Customer"
-                    sx={{
-                      border: "1px solid #fff",
-                      borderRadius: "8px",
-                      mt: "8px",
-                    }}
-                    error={
-                      isValidString(addPaymentForm.errors.customer_name) &&
-                      addPaymentForm.touched.customer_name
+              <FormControl fullWidth sx={{ mt: "8px" }}>
+                <InputLabel id="demo-simple-select-label">
+                  Select Loan
+                </InputLabel>
+                <Select
+                  variant="outlined"
+                  label={"Loan"}
+                  value={addPaymentForm.values.loan_id}
+                  onChange={(e) => {
+                    if (e.target.value !== "Select") {
+                      const loanSelected =
+                        updatedLoanList.filter(
+                          (loan) => loan.id === e.target.value
+                        )[0] || {};
+                      if (Object.keys(loanSelected).length > 0) {
+                        const interestRate =
+                          schemeList.filter(
+                            (item) => item.id === loanSelected.scheme_id
+                          )[0]?.interest_rate || "0";
+                        const amount =
+                          loadInterestCalculate(
+                            interestRate,
+                            loanSelected?.loan_amount
+                          ) || "0";
+                        addPaymentForm.setValues({
+                          ...addPaymentForm.values,
+                          scheme_id: loanSelected?.scheme_id,
+                          loan_id: loanSelected?.id,
+                          loan_amount: loanSelected?.loan_amount,
+                          amount,
+                        });
+                      }
                     }
-                    helperText={addPaymentForm.errors.customer_name}
-                  />
-                )}
-              />
-            </FormControl>
-
-            <FormControl fullWidth sx={{ mt: "8px" }}>
-              <InputLabel id="demo-simple-select-label">Loan</InputLabel>
-              <Select
-                variant="outlined"
-                label={"Loan"}
-                value={addPaymentForm.values.loan_id}
-                onChange={(e) => {
-                  if (e.target.value !== "Select") {
-                    const loanSelected =
-                      updatedLoanList.filter(
-                        (loan) => loan.id === e.target.value
-                      )[0] || {};
-                    if (Object.keys(loanSelected).length > 0) {
-                      const interestRate =
-                        schemeList.filter(
-                          (item) => item.id === loanSelected.scheme_id
-                        )[0]?.interest_rate || "0";
-                      const amount =
-                        loadInterestCalculate(
-                          interestRate,
-                          loanSelected?.loan_amount
-                        ) || "0";
-                      addPaymentForm.setValues({
-                        ...addPaymentForm.values,
-                        scheme_id: loanSelected?.scheme_id,
-                        loan_id: loanSelected?.id,
-                        amount,
-                      });
-                    }
-                  }
-                }}
-              >
-                {updatedLoanList.length > 0 ? (
-                  updatedLoanList.map((loan) => (
-                    <MenuItem value={loan.id} key={loan.id}>
-                      {loan.loan_amount}
-                    </MenuItem>
-                  ))
-                ) : (
-                  <MenuItem value={"Select"}>Select</MenuItem>
-                )}
-              </Select>
-              {isValidString(addPaymentForm.errors.loan_id) &&
-              addPaymentForm.touched.loan_id ? (
-                <Typography
-                  color={"#d32f2f"}
-                  fontSize={"12px"}
-                  padding={"4px 12px 0px 12px"}
+                  }}
                 >
-                  {addPaymentForm.errors.loan_id}
-                </Typography>
-              ) : null}
-            </FormControl>
+                  {updatedLoanList.length > 0 ? (
+                    updatedLoanList.map((loan) => (
+                      <MenuItem value={loan.id} key={loan.id}>
+                        {loan.loan_amount}
+                      </MenuItem>
+                    ))
+                  ) : (
+                    <MenuItem value={"Select"}>Select</MenuItem>
+                  )}
+                </Select>
+                {isValidString(addPaymentForm.errors.loan_id) &&
+                addPaymentForm.touched.loan_id ? (
+                  <Typography
+                    color={"#d32f2f"}
+                    fontSize={"12px"}
+                    padding={"4px 12px 0px 12px"}
+                  >
+                    {addPaymentForm.errors.loan_id}
+                  </Typography>
+                ) : null}
+              </FormControl>
 
-            <FormControl fullWidth margin="dense">
-              <TextField
-                sx={{
-                  border: "1px solid #fff",
-                  color: "#fff",
-                  borderRadius: "8px",
-                  mt: "8px",
-                }}
-                variant="outlined"
-                type="number"
-                label="Amount"
-                value={addPaymentForm.values.amount}
-                onChange={(e) =>
-                  addPaymentForm.setFieldValue("amount", e.target.value)
-                }
-                placeholder="Amount"
-                disabled
-                error={
-                  isValidString(addPaymentForm.errors.amount) &&
-                  addPaymentForm.touched.amount
-                }
-                helperText={addPaymentForm.errors.amount}
-              />
-            </FormControl>
-            <Box sx={{ mt: "16px", textAlign: "center" }}>
-              <Button
-                onClick={addPaymentForm.submitForm}
-                variant="outlined"
-                sx={{ textTransform: "capitalize" }}
-              >
-                Submit
-              </Button>
+              <FormControl fullWidth margin="dense">
+                <TextField
+                  sx={{
+                    border: "1px solid #fff",
+                    color: "#fff",
+                    borderRadius: "8px",
+                    mt: "8px",
+                  }}
+                  variant="outlined"
+                  type="number"
+                  label="Amount"
+                  value={addPaymentForm.values.amount}
+                  onChange={(e) =>
+                    addPaymentForm.setFieldValue("amount", e.target.value)
+                  }
+                  placeholder="Amount"
+                  disabled
+                  error={
+                    isValidString(addPaymentForm.errors.amount) &&
+                    addPaymentForm.touched.amount
+                  }
+                />
+                {isValidString(addPaymentForm.errors.amount) &&
+                addPaymentForm.touched.amount ? (
+                  <Typography
+                    color={"#d32f2f"}
+                    fontSize={"12px"}
+                    padding={"4px 12px 0px 12px"}
+                  >
+                    {addPaymentForm.errors.amount}
+                  </Typography>
+                ) : null}
+              </FormControl>
+              <Box sx={{ mt: "16px", textAlign: "center" }}>
+                <Button
+                  onClick={addPaymentForm.submitForm}
+                  variant="outlined"
+                  sx={{ textTransform: "capitalize" }}
+                >
+                  Submit
+                </Button>
+              </Box>
             </Box>
-          </Box>
-        </Container>
-      )}
-      <Snackbar
-        open={snackbarData.visible}
-        autoHideDuration={1000}
-        onClose={handleClose}
-        message={snackbarData.message}
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-      />
-    </Box>
+          </Container>
+        )}
+        <Snackbar
+          open={snackbarData.visible}
+          autoHideDuration={1000}
+          onClose={handleClose}
+          message={snackbarData.message}
+          anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        />
+      </Container>
+    </>
   );
 };
 

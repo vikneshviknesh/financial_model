@@ -52,8 +52,13 @@ body {
   width: 100%;
   padding: 4px;
   /* max-width: 500px; */
+  justify-content: space-between;
 }
 
+.tab-container button {
+  margin-bottom: 0px;
+  padding-top: 0;
+}
 
 .tab-container .MuiTabs-flexContainer.css-heg063-MuiTabs-flexContainer{
   justify-content: space-around !important;

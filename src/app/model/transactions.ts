@@ -1,4 +1,4 @@
-export interface TransactionModel {
+export interface LoanModel {
   created_at: string;
   customer_id: string;
   id: string;
@@ -12,4 +12,13 @@ export interface AddNewLoanModel {
   scheme_id: string;
   amount: string;
   interest_rate: string;
+}
+
+export interface TransactionModel {
+  amount_paid: string;
+  created_at: string;
+  customer_id: string;
+  loan_id: string;
+  scheme_id: string;
+  updated_at: string;
 }

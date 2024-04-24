@@ -6,8 +6,8 @@ import {
   setDoc,
   getDocs,
   collection,
-  addDoc,
-  getDoc,
+  orderBy,
+  query,
 } from "firebase/firestore";
 
 import { db } from "../config/firebase";
@@ -19,9 +19,11 @@ import { currentDateTime } from "../utils/date";
 import { loadInterestCalculate } from "../utils/interestCalculator";
 import { useTransactionHooks } from "./useTransactionHooks";
 import { AddNewLoanModel } from "../model/transactions";
+import { useLoanHooks } from "./useLoanHooks";
 
 export const useCustomerHooks = () => {
-  const { addTransactions, updateToLoan } = useTransactionHooks();
+  const { addTransactions } = useTransactionHooks();
+  const { addNewLoan, checkAndSettleUpLoan } = useLoanHooks();
 
   const [customerCreateErrorMsg, setCustomerCreateErrorMsg] = useState("");
   const [customersList, setCustomersList] = useState<CustomersListInterface[]>(
@@ -56,7 +58,7 @@ export const useCustomerHooks = () => {
         interest_rate: userInfo.interest_rate,
       };
       addNewLoanToCustomer(loadPayload)
-        .then((response) => {
+        .then(() => {
           setCustomerCreateErrorMsg("");
           setLoading(false);
           resolve("success");
@@ -138,9 +140,8 @@ export const useCustomerHooks = () => {
   const addNewLoanToCustomer = (newLoan: AddNewLoanModel) => {
     return new Promise(async (resolve, reject) => {
       setNewLoadAdding(true);
-
       try {
-        updateToLoan(
+        addNewLoan(
           {
             customer_id: newLoan.customer_id,
             scheme_id: newLoan.scheme_id,
@@ -158,13 +159,17 @@ export const useCustomerHooks = () => {
                 amount_paid: paymentToAdd,
                 loan_id,
               };
-              addTransactions(updatedPayload, (status: boolean) => {
-                if (status) {
-                  setNewLoadnAddErrorMsg("");
-                  setNewLoadAdding(false);
-                  resolve("success");
+              addTransactions(
+                updatedPayload,
+                newLoan.amount,
+                (status: boolean) => {
+                  if (status) {
+                    setNewLoadnAddErrorMsg("");
+                    setNewLoadAdding(false);
+                    resolve("success");
+                  }
                 }
-              });
+              );
             }
           }
         );
@@ -179,7 +184,10 @@ export const useCustomerHooks = () => {
   const getCustomersList = () => {
     return new Promise(async (resolve, reject) => {
       try {
-        const querySnapshot = await getDocs(collection(db, "customers"));
+        const customerCollection = collection(db, "customers");
+        const querySnapshot = await getDocs(
+          query(customerCollection, orderBy("created_at", "asc"))
+        );
         const newData = querySnapshot.docs.map((doc) => ({
           ...doc.data(),
           id: doc.id,

@@ -34,24 +34,32 @@ const validationSchema = Yup.object().shape({
 });
 
 export default function Login() {
-  const { isLoading, isLoggedIn, loginUser, userLoginErrorMsg } =
-    useAuthHooks();
+  const { isLoggedIn, loginUser, userLoginErrorMsg } = useAuthHooks();
 
   const router = useRouter();
 
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setLoading] = useState(false);
 
   const loginForm = useFormik({
     initialValues,
     validateOnChange: true,
     validationSchema,
     onSubmit: (values: typeof initialValues) => {
+      setLoading(true);
       loginUser(values);
     },
   });
 
   useEffect(() => {
+    if (isValidString(userLoginErrorMsg)) {
+      setLoading(false);
+    }
+  }, [userLoginErrorMsg]);
+
+  useEffect(() => {
     if (isLoggedIn) {
+      setLoading(false);
       router.push("/pages/admin");
     }
   }, [isLoggedIn]);
@@ -109,7 +117,12 @@ export default function Login() {
                   isValidString(loginForm.errors.email) &&
                   loginForm.touched.email
                 }
-                helperText={loginForm.errors.email}
+                helperText={
+                  isValidString(loginForm.errors.email) &&
+                  loginForm.touched.email
+                    ? loginForm.errors.email
+                    : ""
+                }
               />
             </FormControl>
             <FormControl fullWidth margin="dense">
@@ -137,7 +150,12 @@ export default function Login() {
                   isValidString(loginForm.errors.password) &&
                   loginForm.touched.password
                 }
-                helperText={loginForm.errors.password}
+                helperText={
+                  isValidString(loginForm.errors.password) &&
+                  loginForm.touched.password
+                    ? loginForm.errors.password
+                    : ""
+                }
               />
             </FormControl>
             {userLoginErrorMsg !== "" ? (

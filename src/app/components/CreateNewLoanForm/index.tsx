@@ -141,7 +141,12 @@ function CreateNewLoanForm({ initialValues, closeForm }: iProps) {
               isValidString(customerForm.errors.amount) &&
               customerForm.touched.amount
             }
-            helperText={customerForm.errors.amount}
+            helperText={
+              isValidString(customerForm.errors.amount) &&
+              customerForm.touched.amount
+                ? customerForm.errors.amount
+                : ""
+            }
           />
         </FormControl>
 

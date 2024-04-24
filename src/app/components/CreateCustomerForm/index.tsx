@@ -49,11 +49,11 @@ function CreateCustomerForm({ initialValues, closeForm }: iProps) {
 
   const customerForm = useFormik({
     initialValues,
-    validateOnChange: true,
     validationSchema: addCustomerScheme,
     onSubmit: (values: typeof initialValues) => {
       addNewCustomer(values)
         .then((response) => {
+          console.log("response", response);
           closeForm("refresh");
         })
         .catch((error) => {
@@ -98,7 +98,12 @@ function CreateCustomerForm({ initialValues, closeForm }: iProps) {
               isValidString(customerForm.errors.customerName) &&
               customerForm.touched.customerName
             }
-            helperText={customerForm.errors.customerName}
+            helperText={
+              isValidString(customerForm.errors.customerName) &&
+              customerForm.touched.customerName
+                ? customerForm.errors.customerName
+                : ""
+            }
           />
         </FormControl>
 
@@ -121,7 +126,12 @@ function CreateCustomerForm({ initialValues, closeForm }: iProps) {
               isValidString(customerForm.errors.mobileNumber) &&
               customerForm.touched.mobileNumber
             }
-            helperText={customerForm.errors.mobileNumber}
+            helperText={
+              isValidString(customerForm.errors.mobileNumber) &&
+              customerForm.touched.mobileNumber
+                ? customerForm.errors.mobileNumber
+                : ""
+            }
           />
         </FormControl>
 
@@ -144,7 +154,12 @@ function CreateCustomerForm({ initialValues, closeForm }: iProps) {
               isValidString(customerForm.errors.address) &&
               customerForm.touched.address
             }
-            helperText={customerForm.errors.address}
+            helperText={
+              isValidString(customerForm.errors.address) &&
+              customerForm.touched.address
+                ? customerForm.errors.address
+                : ""
+            }
           />
         </FormControl>
 
@@ -211,7 +226,12 @@ function CreateCustomerForm({ initialValues, closeForm }: iProps) {
               isValidString(customerForm.errors.amount) &&
               customerForm.touched.amount
             }
-            helperText={customerForm.errors.amount}
+            helperText={
+              isValidString(customerForm.errors.amount) &&
+              customerForm.touched.amount
+                ? customerForm.errors.amount
+                : ""
+            }
           />
         </FormControl>
 
